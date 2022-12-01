@@ -1,0 +1,12 @@
+{
+    "name": "todano/cars",
+    "description": "Web site for selling a cars.",
+    "autoload": {
+        "psr-4": {
+            "Tod\\": "src/"
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    }
+}
