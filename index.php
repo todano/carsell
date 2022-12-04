@@ -43,13 +43,13 @@ call_user_func_array(array($app, $method), $urlParts);
 
 
 
-$con = Tod\Helpers\Database::getConnection();
-
-$sql = "SELECT * FROM `users`";
-$query = $con->prepare($sql);
-$query->execute();
-$users = $query->fetchAll();
-echo '<pre>'; print_r($users);
+// $con = Tod\Helpers\Database::getConnection($_ENV['DB_HOST'], $_ENV['DB_DATABASE'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
+//
+// $sql = "SELECT * FROM `users`";
+// $query = $con->prepare($sql);
+// $query->execute();
+// $users = $query->fetchAll();
+// echo '<pre>'; print_r($users);
 
 
 

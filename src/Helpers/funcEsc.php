@@ -1,4 +1,5 @@
 <?php
+namespace Tod\Helpers;
 
 function esc(string $str,$con)
 {
