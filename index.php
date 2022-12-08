@@ -22,26 +22,23 @@ DEFINE('CONTROLLER_PATH',BASE_PATH.DS.'src'.DS.'Controllers'.DS);
 $url = $_SERVER['REQUEST_URI'];
 // var_dump($url);die;
 
-$url = str_replace(BASE_URL,'',$url);
-$urlParts = array_filter(explode('/',$url));
-$controller = $urlParts[0] ?? DEFAULT_CONTROLLER;
+$url = str_replace(BASE_URL,' ',$url);
+$urlParts = array_filter(explode(' ',$url));
+$controller = $urlParts[1] ?? DEFAULT_CONTROLLER;
 $controller = ucFirst(strtolower($controller));
 $controllerFile = $controller.'.php';
 // echo '<pre>'; print_r($controller);  die;
 
-$method = $urlParts[1] ?? DEFAULT_METHOD;
-unset($urlParts[0],$urlParts[1]);
+$method = $urlParts[2] ?? DEFAULT_METHOD;
+unset($urlParts[1],$urlParts[2]);
 if(!file_exists(CONTROLLER_PATH.$controllerFile))
 {
   $controller = DEFAULT_CONTROLLER;
 }
 $initController = "Tod\\Controllers\\".$controller;
 $app = new $initController();
-
 //call method from the object with params
 call_user_func_array(array($app, $method), $urlParts);
-
-
 
 // $con = Tod\Helpers\Database::getConnection($_ENV['DB_HOST'], $_ENV['DB_DATABASE'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
 //

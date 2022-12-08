@@ -9,7 +9,7 @@ class Main extends Controller
      $cars = Cars::getCars();
 
     // include BASE_PATH.DS.'src'.DS.'Views'.DS.'main'.DS.'index.php';
-    $this->renderView('index','main',[
+    $this->renderView('main','index',[
       'cars' => $cars,
       'test' => ['0' => 1],
       'oshte' => 'massiv'
