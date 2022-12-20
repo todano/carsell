@@ -14,6 +14,9 @@ $count = count($cars); ?>
     <?php require_once('tableCard.php');?>
       <?php foreach ($cars as $key => $car) :?>
         <?php if(($key)%3==0):?>
+          <?php if($key>5):?>
+            <?php return; ?>
+          <?php endif ;?>
           <div class="container text-center p-3 mb-2 bg-light">
             <div class="row justify-content-center p-3 mb-2">
             <?php endif ; ?>
@@ -27,7 +30,7 @@ $count = count($cars); ?>
                 </div>
               </div>
             </div>
-              <?php if(($key+1)%3==0):?>
+            <?php if(($key+1)%3==0):?>
               </div>
             </div>
             <?php endif ;?>
