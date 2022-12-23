@@ -1,6 +1,6 @@
 <?php
 namespace Tod\Controllers;
-
+use \Tod\Models\Login as MLogin;
 class Login extends Controller
 {
   // public function __construct(){
@@ -14,7 +14,7 @@ class Login extends Controller
     // echo '<pre>'; print_r($_POST);
     $credentials = $_POST;
     $con = \Tod\Helpers\Database::getConnection();
-    $user = new \Tod\Models\Login;
+    $user = new MLogin;
     $response = $user->storeToDB($credentials, $con);
     if(!$response['errors']){
       header('loction:/');
@@ -28,8 +28,21 @@ class Login extends Controller
   public function signIn(){
     $userCredit = $_POST;
     $con = \Tod\Helpers\Database::getConnection();
-    $user = new \Tod\Models\Login;
+    $user = new MLogin;
     $user->checkUser($userCredit, $con);
+  }
+  public static function getUser($id = NULL){
+    $con = \Tod\Helpers\Database::getConnection();
+    $sql = "SELECT * FROM `users`";
+    if($id){
+      $sql.=" WHERE `id` = {$id}";
+    }
+    $sql.=" LIMIT 3";
+    $query = $con->prepare($sql);
+    $query->execute();
+    $users = $query->fetchAll(\PDO::FETCH_ASSOC);
+
+    return $users;
   }
   public function destroy(){
     session_start();
