@@ -3,15 +3,11 @@ namespace Tod\Controllers;
 use \Tod\Models\Login as MLogin;
 class Login extends Controller
 {
-  // public function __construct(){
-  //   echo 'You are in login controller!';
-  // }
-
+  
   public function create(){
     $this->renderView('users','register');
   }
   public function store(){
-    // echo '<pre>'; print_r($_POST);
     $credentials = $_POST;
     $con = \Tod\Helpers\Database::getConnection();
     $user = new MLogin;
@@ -29,7 +25,13 @@ class Login extends Controller
     $userCredit = $_POST;
     $con = \Tod\Helpers\Database::getConnection();
     $user = new MLogin;
-    $user->checkUser($userCredit, $con);
+    $response = $user->checkUser($userCredit, $con);
+    
+    if(!$response['errors']){
+      $user->session($response);
+    } else{
+      $this->renderView('users','signIn',$response);
+    }
   }
   public static function getUser($id = NULL){
     $con = \Tod\Helpers\Database::getConnection();

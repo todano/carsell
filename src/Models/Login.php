@@ -18,8 +18,6 @@ class Login
   ];
 
   public function storeToDB($params, $con){
-    // echo '<pre>'; print_r($params);  die;
-
     if(($this->response['errors']=$this->validate($params, $con)) == true){
       return $this->response;
     }
@@ -52,7 +50,6 @@ class Login
       $query = $con->prepare($sql);
       $query->execute();
 
-      // $sql = "SELECT * FROM `users`";
       $sql = "SELECT *
               FROM `users`
               WHERE `email` = '{$this->email}'
@@ -61,46 +58,43 @@ class Login
       $query->execute();
       $user = $query->fetch(\PDO::FETCH_ASSOC);
       $this->session($user);
-      $this->response['message'] = "Потребителят е записан успешно!";
-      // echo '<pre>'; print_r($query);  die;
-      // header("Location: index.php");
+      $this->response['message'] = "Account has ben created successfully!";
     } catch (PDOException $e){
-      $this->response['message'] = "Възникна грешка, моля свържете се с нас.";
+      $this->response['message'] = "There was some error, please contact with us.";
       $this->response['errors'][] = $sql . "<br>" . $e->getMessage();
     }
     return $this->response;
   }
 
   private function validate($params, $con){
-    // echo '<pre>'; print_r($params);  die;
-
+   
     if(isset($params)) {
      $errors=[];
       //validate name
       if(!mb_strlen($params['name'])) {
-          $errors['name'] = "Въведете име.";
+          $errors['name'] = "Please input a name.";
       } else if(mb_strlen($params['name']) > 32) {
-          $errors['name'] = "Максималната дължина на името е 32 символа.";
+          $errors['name'] = "The maximum lenth of the name is 32 symbols.";
       }
       //validate lastName
       if(!mb_strlen($params['lastName'])) {
-          $errors['lastName'] = "Въведете име.";
+          $errors['lastName'] = "Please input a name.";
       } else if(mb_strlen($params['lastName']) > 32) {
-          $errors['lastName'] = "Максималната дължина на името е 32 символа.";
+          $errors['lastName'] = "The maximum lenth of the name is 32 symbols.";
       }
       //validate username
       if(!mb_strlen($params['username'])) {
-          $errors['username'] = "Въведете име.";
+          $errors['username'] = "Please input a name.";
       } else if(mb_strlen($params['username']) > 32) {
-          $errors['username'] = "Максималната дължина на името е 32 символа.";
+          $errors['username'] = "The maximum lenth of the name is 32 symbols.";
       }
       //validate email address
       if(!mb_strlen($params['email'])) {
-          $errors['email'] = "Въведете имейл адрес.";
+          $errors['email'] = "Please input an email address.";
       } else if(mb_strlen($params['email']) > 64) {
-          $errors['email'] = "Максималната дължина на имейл адрес е 64 символа";
+          $errors['email'] = "The maximum lenth of the email is 64 symbols.";
       } else if(!filter_var($params['email'], FILTER_VALIDATE_EMAIL)) {
-          $errors['email'] = "Въведете коректен имейл адрес.";
+          $errors['email'] = "Input a valid email address.";
       } else {
           $sql = "SELECT *
                   FROM `users`
@@ -110,25 +104,25 @@ class Login
           $query->execute();
           $result = $query->fetchColumn();
           if($result) {
-            $errors['email'] = "Съществува потребител с въведения имейл адрес.";
+            $errors['email'] = "There is already a user with that email.";
           }
       }
       // validate password
       if(!mb_strlen($params['password'])) {
-          $errors['password'] = "Въведете парола.";
+          $errors['password'] = "Type a password.";
       } else if(mb_strlen($params['password']) < 8 || mb_strlen($params['password']) > 100) {
-          $errors['password'] = "Паролата трябва да е между 8 и 100 символа.";
+          $errors['password'] = "Password should be between 8 and 100 letters.";
       }
       if(!mb_strlen($params['repassword'])) {
-          $errors['repassword'] = "Повторете парола.";
+          $errors['repassword'] = "Repeat password.";
       } else if($params['password'] !== $params['repassword']) {
-          $errors['repassword'] = "Въведените пароли не съвпадат.";
+          $errors['repassword'] = "Two passwords doesnt match up.";
       }
       //validate city
       if(!mb_strlen($params['city'])) {
-          $errors['name'] = "Въведете град.";
+          $errors['name'] = "Type a city.";
       } else if(mb_strlen($params['city']) > 32) {
-          $errors['name'] = "Максималната дължина на името на града е 32 символа.";
+          $errors['name'] = "Maximum lenth of a city is 32 letters.";
       }
     }
     return $errors;
@@ -142,11 +136,10 @@ class Login
       $this->repassword = $params['repassword'];
       $this->city = $params['city'];
   }
-  private function session($user){
+  public function session($user){
     session_start();
     $_SESSION['id'] = $user['id'];
-    // echo '<pre>'; print_r($_SESSION['id']);  die;
-    header('location:\index.php');
+    header('location:\index.php');// Controller or model?
   }
   public function checkUser($credits, $con){
     $sql = "SELECT *
@@ -156,11 +149,12 @@ class Login
     $query = $con->prepare($sql);
     $query->execute();
     $result = $query->fetch(\PDO::FETCH_ASSOC);
-
+    
     if(password_verify($credits['password'], $result['password'])){
-      $this->session($result);
+      return $result;
     } else {
-      echo 'sburkal si parolata'; die;
+      $this->response['errors'] = 'Password is incorrect';
+      return $this->response;
     }
   }
 }

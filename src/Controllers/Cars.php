@@ -1,5 +1,6 @@
 <?php
 namespace Tod\Controllers;
+use Tod\Models\Car as MCar;
 
 class Cars extends Controller
 {
@@ -31,6 +32,16 @@ class Cars extends Controller
 
   public function create(){
     $this->renderView('cars', 'new');
+  }
+  public function store(){
+    $car = $_POST;
+    if($_FILES){
+      $car['img'] = $_FILES['file'];
+    }
+
+    $add = new MCar;
+    $add->validate($car);
+    
   }
 
   public static function countPages($perPage=6){
