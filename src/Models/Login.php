@@ -2,7 +2,7 @@
 
 namespace Tod\Models;
 
-class Login
+class Login extends Model
 {
   private $role = 'user';
   private $name;
@@ -16,9 +16,14 @@ class Login
     'message' => '',
     'errors' => []
   ];
+  
+  public function __construct()
+  {
+    parent::__construct();
+  }
 
-  public function storeToDB($params, $con){
-    if(($this->response['errors']=$this->validate($params, $con)) == true){
+  public function storeToDB($params){
+    if(($this->response['errors']=$this->validate($params)) == true){
       return $this->response;
     }
 
@@ -47,14 +52,14 @@ class Login
                '$this->city',
                 NOW(),
                '$date')";
-      $query = $con->prepare($sql);
+      $query = $this->db->prepare($sql);
       $query->execute();
 
       $sql = "SELECT *
               FROM `users`
               WHERE `email` = '{$this->email}'
               ";
-      $query = $con->prepare($sql);
+      $query = $this->db->prepare($sql);
       $query->execute();
       $user = $query->fetch(\PDO::FETCH_ASSOC);
       $this->session($user);
@@ -66,7 +71,7 @@ class Login
     return $this->response;
   }
 
-  private function validate($params, $con){
+  private function validate($params){
    
     if(isset($params)) {
      $errors=[];
@@ -100,7 +105,7 @@ class Login
                   FROM `users`
                   WHERE `email` = '{$params['email']}'
                   ";
-          $query = $con->prepare($sql);
+          $query = $this->db->prepare($sql);
           $query->execute();
           $result = $query->fetchColumn();
           if($result) {
@@ -127,6 +132,7 @@ class Login
     }
     return $errors;
   }
+
   private function fillData($params){
       $this->name = $params['name'];
       $this->lastName = $params['lastName'];
@@ -136,25 +142,20 @@ class Login
       $this->repassword = $params['repassword'];
       $this->city = $params['city'];
   }
-  public function session($user){
-    session_start();
-    $_SESSION['id'] = $user['id'];
-    header('location:\index.php');// Controller or model?
-  }
-  public function checkUser($credits, $con){
+ 
+  public function checkUser($credits){
     $sql = "SELECT *
             FROM `users`
             WHERE `email` = '{$credits['email']}'
             ";
-    $query = $con->prepare($sql);
+    $query = $this->db->prepare($sql);
     $query->execute();
     $result = $query->fetch(\PDO::FETCH_ASSOC);
     
     if(password_verify($credits['password'], $result['password'])){
       return $result;
-    } else {
-      $this->response['errors'] = 'Password is incorrect';
-      return $this->response;
-    }
+    } 
+    $this->response['errors'] = 'Password is incorrect';
+    return $this->response;
   }
 }

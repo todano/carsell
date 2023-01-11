@@ -4,57 +4,28 @@ use Tod\Models\Car as MCar;
 
 class Cars extends Controller
 {
-  public static function getCars($id = NULL, $page = 1, $perPage = 6){
-    $con = \Tod\Helpers\Database::getConnection();
-    if(isset($_GET['page'])){
-      $page = (int) $_GET['page'];
-    }
-    if(isset($_GET['perPage'])){
-      $perPage = (int) $_GET['perPage'];
-    }
-           
-    $from = ($page-1);
-    if($from>0){
-      $from*=$perPage;
-    }
-    
-    $sql = "SELECT * FROM `cars`";
-    if($id){
-      $sql.=" WHERE `car_id` = {$id}";
-    }
-    $sql.=" LIMIT {$from},{$perPage}";
-    $query = $con->prepare($sql);
-    $query->execute();
-    $cars = $query->fetchAll(\PDO::FETCH_ASSOC);
-
-    return $cars;
+  public function __construct()
+  {
+    //calling parrent construct, with dedicated model
+    parent::__construct(MCar::class);
+  }
+  
+  public function getCars($id = NULL, $page = 1, $perPage = 6){
+    return $this->model->getCars($id, $page, $perPage);
   }
 
   public function create(){
     $this->renderView('cars', 'new');
   }
   public function store(){
-    $car = $_POST;
-    if($_FILES){
-      $car['img'] = $_FILES['file'];
-    }
-
-    $add = new MCar;
-    $add->validate($car);
-    
-  }
-
-  public static function countPages($perPage=6){
-    $con = \Tod\Helpers\Database::getConnection();
-    $sql = "SELECT COUNT('car_id') FROM `cars`";
-    $query = $con->prepare($sql);
-    $query->execute();
-    $count = implode($query->fetch(\PDO::FETCH_NUM));
-    $pages = $count/$perPage;
-        
-    if(is_float($pages)){
-      $pages = (int)$pages+1;
-    }
-    return $pages;
+   $car = $_POST;
+   if($_FILES){
+     $car['img'] = $_FILES['my_file'];
+   }
+   $add = $this->model->validate($car);    
+   if(!$add['errors']){
+    header('location:\index.php');
+   }
+   $this->renderView('cars', 'new', $add);
   }
 }

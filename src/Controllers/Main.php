@@ -1,15 +1,24 @@
 <?php
 namespace Tod\Controllers;
+use Tod\Models\Car as MCar;
 
 class Main extends Controller
 {
+  protected $carsController;
+
+  public function __construct()
+  {
+    $this->carsController = new Cars;
+    parent::__construct(MCar::class);
+  }
+  
   public function index(){
     //all variables will be passed to the view
-    $page = $_GET['page'] ?? NULL;
+    $page = $_GET['page'] ?? 1;
     $perPage = $_GET['perPage'] ?? 6;
-    $pages = Cars::countPages($perPage);
+    $pages = $this->carsController->model->countPages($perPage);
    
-    $cars = Cars::getCars();
+    $cars = $this->carsController->getCars();
     // include BASE_PATH.DS.'src'.DS.'Views'.DS.'main'.DS.'index.php';
     $this->renderView('main','index',[
       'cars' => $cars,
@@ -19,7 +28,7 @@ class Main extends Controller
     ]);
   }
   public function show($id){
-    $car = Cars::getCars($id)[0];
+    $car = $this->carsController->getCars($id)[0];
     $user = Login::getUser($car['user_id'])[0];
     $this->renderView('main', 'show',[
       'car' => $car,

@@ -20,16 +20,28 @@
                 <input input="text" name="year"> 
             </div>
             <div class="col-md-4">
-                <label class="form-lable">Price</label>
-                <input input="text" name="price"> 
+                <label for="price" class="form-lable">Price</label>
+                <input id="price" input="text" name="price"> 
             </div>
             <div class="col-md-4">
-                <input type='file' name='file'><br>
+                <label for="engine" class="form-lable">Engine</label>
+                <input id="engine" input="text" name="engine"> 
+            </div>
+            <div class="col-md-4 position-relative">
+                <!-- <div class="row"> -->
+                    <div class="col-md-2 position-absolute top-0 start-0" style="font-size:12px;">
+                        <label for="file"><img src="/src/img/default.jpg" class="rounded mx-auto d-block" width="80" height="100"></label>
+                        <input id="file" type="file" name="my_file[]" multiple style="display: none">
+                    </div>
+                    <!-- <div class="col-md-2 position-absolute top-0 start-50" style="font-size:12px;">
+                        <label for="file2"><img src="/src/img/default.jpg" class="rounded mx-auto d-block" width="80" height="100"></label>
+                        <input id="file2" type="file" name="my_file[]" multiple style="display: none"> 
+                    </div>
+                </div>     -->
             </div>
             <div class="col-md-4">
                 <button class="btn btn-primary" type="submit">Submit form</button>
             </div>
-
         </form>
     </body>
 </html>

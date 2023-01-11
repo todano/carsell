@@ -7,7 +7,7 @@
       <div class="container text-center p-3 mb-2 bg-light">
         <div class="row justify-content-center p-3 mb-2">
         <div class="col-4">
-            <img src="/src/img/<?=$car['car_id']?>.jpg" class="card-img-top" alt="...">
+            <img src="/src/img/<?=$car['car_id']?>/<?=$car['default_image'] ?>" class="card-img-top" alt="...">
           </div>
           <div class="col-4">
             <h5 class="text-start">Date of production: <?= $car['date_production'] ?></h5> 

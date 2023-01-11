@@ -19,7 +19,7 @@
           <?php endif ; ?>
           <div class="col-4">
             <div class="card" style="width: 18rem;">
-              <img src="/src/img/<?=$car['car_id']?>.jpg" class="card-img-top" alt="...">
+              <img src="/src/img/<?=$car['car_id']?>/<?=$car['default_image'] ?>" class="card-img-top" alt="...">
               <div class="card-body bg-info">
                 <h5 class="card-title"><?= $car['brand'].' '.$car['model'] ?></h5>
                 <h5 class="card-text"> <?= $car['date_production'] ?></h5>
@@ -43,6 +43,7 @@
         </li>
         <?php endif; ?>
         <?php for($i=1; $i<=$pages;$i++) :?>
+          <?php if($i>2 && $pages-$i>1) continue ;?>
           <li class="page-item"><a class="page-link" href="/main/index/?page=<?= $i ?>&perPage=<?= $perPage ?>"><?= $i ?></a></li>
         <?php endfor; ?>
         <?php if($page<$pages) :?>
