@@ -52,7 +52,6 @@ class Car extends Model
                 NOW(),
                 NOW())";
     $query = $this->db->prepare($sql);
-    // echo '<pre>'; print_r($query); die;
     $query->execute();
     $carId = $this->db->lastInsertId();
     } catch (PDOException $e){

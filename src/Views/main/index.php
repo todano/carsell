@@ -1,4 +1,4 @@
-<?php //echo '<pre>'; print_r($page); //die; ?>
+<?php //echo '<pre>'; print_r($data); //die; ?>
 <!doctype html>
 <html>
   <?php require_once('header.php');?>
@@ -37,20 +37,22 @@
     <!-- TODO: Count pages and fix prev and next -->
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-end">
-        <?php if($page>1) :?>
-        <li class="page-item">
-          <a class="page-link" href="/main/index/?page=<?= ($page-1) ?>&perPage=<?= $perPage ?>">Previous</a>
-        </li>
-        <?php endif; ?>
-        <?php for($i=1; $i<=$pages;$i++) :?>
-          <?php if($i>2 && $pages-$i>1) continue ;?>
-          <li class="page-item"><a class="page-link" href="/main/index/?page=<?= $i ?>&perPage=<?= $perPage ?>"><?= $i ?></a></li>
-        <?php endfor; ?>
-        <?php if($page<$pages) :?>
-        <li class="page-item">
-          <a class="page-link" href="/main/index/?page=<?= ($page+1) ?>&perPage=<?= $perPage ?>">Next</a>
-        </li>
-        <?php endif; ?>
+        <?php if(isset($page)) : ?>
+          <?php if($page>1) :?>
+            <li class="page-item">
+              <a class="page-link" href="/main/index/?page=<?= ($page-1) ?>&perPage=<?= $perPage ?>">Previous</a>
+            </li>
+            <?php endif; ?>
+            <?php for($i=1; $i<=$pages;$i++) :?>
+              <?php if($i>2 && $pages-$i>1) continue ;?>
+              <li class="page-item"><a class="page-link" href="/main/index/?page=<?= $i ?>&perPage=<?= $perPage ?>"><?= $i ?></a></li>
+            <?php endfor; ?>
+            <?php if($page<$pages) :?>
+            <li class="page-item">
+              <a class="page-link" href="/main/index/?page=<?= ($page+1) ?>&perPage=<?= $perPage ?>">Next</a>
+            </li>
+          <?php endif; ?>
+        <?php endif ; ?>  
       </ul>
     </nav>
   </body>
