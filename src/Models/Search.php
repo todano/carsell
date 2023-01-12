@@ -33,17 +33,44 @@ class Search extends Model
         date_production LIKE '%{$search}%' OR
         mileage LIKE '%{$search}%' OR
         price LIKE '%{$search}%' OR
-        engine LIKE '%{$search}%'";
+        fuel LIKE '%{$search}%' OR
+        hp LIKE '%{$search}%' OR
+        cubic LIKE '%{$search}%' OR
+        category LIKE '%{$search}%' OR
+        transmission LIKE '%{$search}%'";
 
         $sql .= " LIMIT {$from},{$perPage}";
         $query = $this->db->prepare($sql);
         $query->execute();
-        $result['cars'] = $query->fetchAll(\PDO::FETCH_ASSOC);
-        
+        $result = $query->fetchAll(\PDO::FETCH_ASSOC);
         if(!$result){
-           $this->response['message'] = 'Nothing found!';
-           return $this->response;
+          $this->response['message'] = 'Nothing found!';
+          return $this->response;
         }
         return $result;
+    }
+    public function countPages($search, $perPage){
+      $sql = "SELECT * FROM `cars` WHERE 
+        brand LIKE '%{$search}%' OR
+        model LIKE '%{$search}%' OR
+        date_production LIKE '%{$search}%' OR
+        mileage LIKE '%{$search}%' OR
+        price LIKE '%{$search}%' OR
+        fuel LIKE '%{$search}%' OR
+        hp LIKE '%{$search}%' OR
+        cubic LIKE '%{$search}%' OR
+        category LIKE '%{$search}%' OR
+        transmission LIKE '%{$search}%'";
+
+        $query = $this->db->prepare($sql);
+        $query->execute();
+        $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+        $count = count($result);
+        $pages = $count / $perPage;
+
+        if (is_float($pages)) {
+          $pages = (int)$pages + 1;
+        }
+        return $pages;
     }
 }

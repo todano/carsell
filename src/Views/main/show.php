@@ -13,6 +13,10 @@
             <h5 class="text-start">Date of production: <?= $car['date_production'] ?></h5> 
             <h5 class="text-start">Mileage: <?= $car['mileage'] ?></h5> 
             <h5 class="text-start">Price: <?= $car['price'] ?></h5> 
+            <h5 class="text-start">Fuel: <?= $car['fuel'] ?></h5> 
+            <h5 class="text-start">Hp: <?= $car['hp'] ?></h5> 
+            <h5 class="text-start">Cubic: <?= $car['cubic'] ?></h5> 
+            <h5 class="text-start">Transmission: <?= $car['transmission'] ?></h5> 
           </div>
           <div class="col-4"> 
             <h5 class="text-start">Published by: <?= ucwords($user['name']).' '.ucwords($user['last_name']) ?></h5> 

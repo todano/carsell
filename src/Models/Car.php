@@ -9,7 +9,11 @@ class Car extends Model
   private $price;
   private $year;
   private $mileage;
-  private $engine;
+  private $fuel;
+  private $hp;
+  private $cubic;
+  private $category;
+  private $transmission;
   private $response = [
     'message' => '',
     'errors' => []
@@ -22,12 +26,19 @@ class Car extends Model
   public function validate($car)
   {
     $userId = $_SESSION['id'];
-    $this->brand = ucwords(trim($car['brand']));
-    $this->model = ucwords(trim($car['model']));
-    $this->mileage = trim($car['mileage']);
+    $this->brand = ucwords(strtolower(trim($car['brand'])));
+    $this->model = ucwords(strtolower(trim($car['model'])));
     $this->year = trim($car['year']);
-    $this->engine = trim($car['engine']);
+    $this->mileage = trim($car['mileage']);
     $this->price = '$' . trim($car['price']);
+    $this->fuel = ucwords(strtolower(trim($car['fuel'])));
+    $this->hp = (int) trim($car['hp']);
+    if(is_float($car['cubic'])){
+      return $this->response['errors'][] = 'You must enter decimal number for cubic'; 
+    }
+    $this->cubic = (float) trim($car['cubic']);
+    $this->category = ucwords(strtolower(trim($car['category'])));
+    $this->transmission = ucwords(strtolower(trim($car['transmission'])));
 
     // insert into db 
     //get car_id
@@ -37,20 +48,30 @@ class Car extends Model
                   `brand`,
                   `model`,
                   `date_production`,
-                  `mileage`, `price`,
+                  `mileage`, 
+                  `price`,
                   `created_at`,
                   `last_update`,
-                  `engine`) 
+                  `fuel`,
+                  `hp`,
+                  `cubic`,
+                  `category`,
+                  `transmission`) 
               VALUES 
                 ('{$userId}',
                 '{$this->brand}',
                 '{$this->model}',
-                '{$this->mileage}',
                 '{$this->year}',
-                '{$this->engine}',
+                '{$this->mileage}',
                 '{$this->price}',
-                NOW(),
-                NOW())";
+                  NOW(),
+                  NOW(),
+                '{$this->fuel}',
+                '{$this->hp}',
+                '{$this->cubic}',
+                '{$this->category}',
+                '{$this->transmission}'
+                )";
     $query = $this->db->prepare($sql);
     $query->execute();
     $carId = $this->db->lastInsertId();

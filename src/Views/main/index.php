@@ -1,4 +1,4 @@
-<?php //echo '<pre>'; print_r($data); //die; ?>
+<?php //echo '<pre>'; print_r($data); die; ?>
 <!doctype html>
 <html>
   <?php require_once('header.php');?>
@@ -7,8 +7,13 @@
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-end">
         <h5>Items per page: </h5>
-        <li class="page-item"><a class="page-link" href="/main/index/?page=1&perPage=6">6</a></li>
-        <li class="page-item"><a class="page-link" href="/main/index/?page=1&perPage=9">9</a></li>
+        <?php if(isset($search)) :?>
+          <li class="page-item"><a class="page-link" href="/search/index/?page=1&perPage=6&search=<?= $search ?>">6</a></li>
+          <li class="page-item"><a class="page-link" href="/search/index/?page=1&perPage=9&search=<?= $search ?>">9</a></li>
+        <?php else :?>
+          <li class="page-item"><a class="page-link" href="/main/index/?page=1&perPage=6">6</a></li>
+          <li class="page-item"><a class="page-link" href="/main/index/?page=1&perPage=9">9</a></li>
+        <?php endif ; ?>
       </ul>
     </nav>
     <?php //require_once('tableCard.php');?>
@@ -34,7 +39,6 @@
       <?php endif ;?>
     <?php endforeach ;?>
           
-    <!-- TODO: Count pages and fix prev and next -->
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-end">
         <?php if(isset($page)) : ?>
@@ -45,7 +49,11 @@
             <?php endif; ?>
             <?php for($i=1; $i<=$pages;$i++) :?>
               <?php if($i>2 && $pages-$i>1) continue ;?>
-              <li class="page-item"><a class="page-link" href="/main/index/?page=<?= $i ?>&perPage=<?= $perPage ?>"><?= $i ?></a></li>
+              <?php if(isset($search)) :?>
+                <li class="page-item"><a class="page-link" href="/search/index/?page=<?= $i ?>&perPage=<?= $perPage ?>&search=<?= $search ?>"><?= $i ?></a></li>
+              <?php else :?>
+                <li class="page-item"><a class="page-link" href="/main/index/?page=<?= $i ?>&perPage=<?= $perPage ?>"><?= $i ?></a></li>
+              <?php endif; ?>
             <?php endfor; ?>
             <?php if($page<$pages) :?>
             <li class="page-item">
