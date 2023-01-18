@@ -2,6 +2,8 @@
 
 namespace Tod\Models;
 
+use Exception;
+
 class Login extends Model
 {
   private $role = 'user';
@@ -12,10 +14,7 @@ class Login extends Model
   private $password;
   private $repassword;
   private $city;
-  private $response = [
-    'message' => '',
-    'errors' => []
-  ];
+
   
   public function __construct()
   {
@@ -152,10 +151,9 @@ class Login extends Model
     $query->execute();
     $result = $query->fetch(\PDO::FETCH_ASSOC);
     
-    if(password_verify($credits['password'], $result['password'])){
-      return $result;
+    if(!password_verify($credits['password'], $result['password'])){
+      throw new Exception('Password is incorrect');
     } 
-    $this->response['errors'] = 'Password is incorrect';
-    return $this->response;
+    return $result;
   }
 }

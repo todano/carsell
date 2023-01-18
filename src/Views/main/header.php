@@ -1,3 +1,4 @@
+<?php //echo '<pre>'; print_r($_SESSION); ?>
 <head >
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -31,7 +32,9 @@
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/cars/create">Add advertisment</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <?php if(isset($_SESSION) && $_SESSION['role'] == 'admin' ) :?>
+                <li><a class="dropdown-item" href="/admin/cars/">Admin panel</a></li>
+              <?php endif ;?>
               <li><hr class="dropdown-divider"></li>
               <li><a class="nav-link" href="/login/destroy">Logout</a></li>
             </ul>

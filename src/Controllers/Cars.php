@@ -10,8 +10,8 @@ class Cars extends Controller
     parent::__construct(MCar::class);
   }
   
-  public function getCars($id = NULL, $page = 1, $perPage = 6){
-    return $this->model->getCars($id, $page, $perPage);
+  public function getCars($id = NULL, $page = 1, $perPage = 6, $role = 'user'){
+    return $this->model->getCars($id, $page, $perPage, $role);
   }
 
   public function create(){
@@ -27,5 +27,9 @@ class Cars extends Controller
     header('location:\index.php');
    }
    $this->renderView('cars', 'new', $add);
+  }
+
+  public function verify($verify){
+    return $this->model->verify($verify);
   }
 }

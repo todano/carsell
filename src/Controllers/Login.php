@@ -1,5 +1,7 @@
 <?php
 namespace Tod\Controllers;
+
+use Exception;
 use \Tod\Models\Login as MLogin;
 
 class Login extends Controller
@@ -26,13 +28,15 @@ class Login extends Controller
   }
   public function signIn(){
     $userCredit = $_POST;
-    $user = $this->model->checkUser($userCredit);
-    if(!$user['errors']){
-      $_SESSION['id'] = $user['id'];
+    try{
+      $user = $this->model->checkUser($userCredit);
+      $_SESSION = $this->model->except($user, ['password']);
       header('location:\index.php');
-    } else{
-      $this->renderView('users','signIn',$user);
-    }
+    } catch (Exception $e){
+      $this->setResponse($e->getMessage());
+      $this->renderView('users','signIn',$this->getResponse());
+    } 
+     
   }
   public static function getUser($id = NULL){
     $con = \Tod\Helpers\Database::getConnection();

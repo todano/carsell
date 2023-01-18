@@ -27,6 +27,7 @@ class Search extends Controller
         }
 
         $result = $this->model->index($search, $page, $perPage);
+        
         if (isset($result['message'])) {
             $this->renderView('main', 'index', $result);
         }

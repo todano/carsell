@@ -14,10 +14,7 @@ class Car extends Model
   private $cubic;
   private $category;
   private $transmission;
-  private $response = [
-    'message' => '',
-    'errors' => []
-  ];
+  
 
   public function __construct()
   {
@@ -129,7 +126,7 @@ class Car extends Model
     return $imgName;
   }
 
-  public function getCars($id, $page, $perPage)
+  public function getCars($id, $page, $perPage, $role)
   {
     if (isset($_GET['page'])) {
       $page = (int) $_GET['page'];
@@ -144,18 +141,26 @@ class Car extends Model
     }
 
     $sql = "SELECT * FROM `cars`";
+    if($role != 'admin'){
+      $sql.= " WHERE verified != 0 ";
+    } 
     if ($id) {
-      $sql .= " WHERE `car_id` = {$id}";
+      $sql .= " AND `car_id` = {$id}";
     }
+    
     $sql .= " LIMIT {$from},{$perPage}";
     $query = $this->db->prepare($sql);
     $query->execute();
     return $query->fetchAll(\PDO::FETCH_ASSOC);
   }
 
-  public function countPages($perPage = 6)
+  public function countPages($perPage = 6, $role = 'user')
   {
-    $sql = "SELECT COUNT('car_id') FROM `cars`";
+    $sql = "SELECT COUNT('car_id') FROM `cars`"; 
+    if($role != 'admin'){
+      $sql.= " WHERE verified != 0";
+    }  
+    
     $query = $this->db->prepare($sql);
     $query->execute();
     $count = implode($query->fetch(\PDO::FETCH_NUM));
@@ -165,5 +170,16 @@ class Car extends Model
       $pages = (int)$pages + 1;
     }
     return $pages;
+  }
+
+  public function verify($verify){
+    $verify = str_replace('on',1,$verify);
+    foreach ($verify as $key => $value){
+      $sql = "UPDATE `cars` SET verified = $value WHERE car_id = {$key}";
+      $query = $this->db->prepare($sql);
+      $query->execute();
+      // $result[] = $query->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    return;
   }
 }

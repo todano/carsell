@@ -1,3 +1,4 @@
+<?php  //die; ?>
 <html>
   <?php require_once('E:\xampp\htdocs\carsell\src\Views\main\header.php'); ?>
   <body>
@@ -18,7 +19,7 @@
         <input type="password" name="password" class="form-control" id="inputPassword4">
         <?php if(!empty($data)) :?>
         <div class='text-danger'>
-           <?= $data['errors'] ;?>
+           <?= $data['msg'] ;?>
         </div>
         <?php endif ; ?>
       </div>
