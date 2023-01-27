@@ -1,4 +1,4 @@
-<?php // echo '<pre>'; print_r($data); die; ?>
+<?php // echo '<pre>'; print_r($_SESSION); die; ?>
 <!doctype html>
 <html>
   <?php require_once('header.php');?>
@@ -16,7 +16,7 @@
         <?php endif ; ?>
       </ul>
     </nav>
-    <?php //require_once('tableCard.php');?>
+   
     <?php if(isset($data['message']))  :?>
       <div class="container text-center p-3 mb-2 bg-light">
         <div class="row justify-content-center p-3 mb-2">

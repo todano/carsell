@@ -16,7 +16,6 @@
     <a href="/">Home</a>
     <a href="/admin/cars/">Cars</a>
     <a href="#clients">Users</a>
-    <a href="#contact">Comments</a>
   </div>
   <div class="main">
   <nav aria-label="Page navigation example">
@@ -41,11 +40,11 @@
                 <h5 class="card-title"><?= $car['brand'] . ' ' . $car['model'] ?></h5>
                 <h5 class="card-text"> <?= $car['date_production'] ?></h5>
                 <h5 class="card-text"> <?= $car['price'] ?></h5>
-                <a href="/main/show/<?= $car['car_id'] ?>" class="btn btn-primary">View details</a>
+                <a href="/admin/showCar/<?= $car['car_id'] ?>" class="btn btn-primary">View details</a>
                   <?php if ($car['verified'] == 1) : ?>
-                    <input type="checkbox" id="verified" name="verified" checked>
+                    <input type="checkbox" id="verified" name="verified[<?= $car['car_id'] ?>]" checked>
                   <?php else : ?>
-                    <input type="checkbox" id="verified" name="verified['<?= $car['car_id'] ?>']">
+                    <input type="checkbox" id="verified" name="verified[<?= $car['car_id'] ?>]">
                     <label for="verified"></label>
                     <?php endif; ?>
                   </div>

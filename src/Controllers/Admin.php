@@ -2,15 +2,20 @@
 namespace Tod\Controllers;
 use Tod\Models\Admin as AdminM;
 use Tod\Models\Car as Mcar;
+use Tod\Models\Login as Mlog;
 
 class Admin extends Controller
 { 
   protected $carsController;
+  protected $loginController;
 
   public function __construct()
   {
     $this->carsController = new Cars;
     parent::__construct(MCar::class);
+    
+    $this->loginController = new Login;
+    parent::__construct(Mlog::class);
   }
   // public function index(){
   //     $this->renderView('admin', 'index');
@@ -29,7 +34,14 @@ class Admin extends Controller
       'pages' => $pages
     ]);
   }
-
+  public function showCar(int $id){
+    $car = $this->carsController->getCars( id: $id, role:'admin')[0];
+    $user = $this->loginController->getUser($car['user_id'])[0];
+    $this->renderView('admin', 'show',[
+      'car' => $car,
+      'user' => $user
+    ]);
+  }
   public function verCars(){
     $verify = $_POST['verified'] ?? '';
     $this->carsController->verify($verify);

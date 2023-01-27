@@ -17,8 +17,11 @@ class Login extends Controller
   public function store(){
     $credentials = $_POST;  
     $response = $this->model->storeToDB($credentials);
+    $user = $response['data'];
+    $_SESSION = $this->model->except($user, ['password']);
+    
     if(!$response['errors']){
-      header('loction:/');
+      header('location:/');
     } else{
       $this->renderView('users','register',$response);
     }
@@ -53,6 +56,6 @@ class Login extends Controller
   }
   public function destroy(){
     session_destroy();
-    header('location: /index.php');
+    header('location: /');
   }
 }

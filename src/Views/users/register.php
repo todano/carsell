@@ -24,14 +24,15 @@
         </div>
         <div class="col-md-5">
           <label for="validationDefaultUsername" class="form-label">Username</label>
-          <div class="input-group">
-            <span class="input-group-text" id="inputGroupPrepend2">@</span>
             <input type="text" name='username' class="form-control" id="validationDefaultUsername"  aria-describedby="inputGroupPrepend2" required>
           </div>
         </div>
         <div class="col-md-5">
           <label for="inputEmail4" class="form-label">Email</label>
-          <input type="email" name="email" class="form-control" id="inputEmail4">
+          <div class="input-group">
+            <span class="input-group-text" id="inputGroupPrepend2">@</span>
+            <input type="email" name="email" class="form-control" id="inputEmail4">
+          </div>
         </div>
         <div class="col-md-5">
           <label for="inputPassword4" class="form-label">Password</label>

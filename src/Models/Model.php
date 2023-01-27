@@ -6,8 +6,10 @@ class Model
     protected $db;
     protected $response = [
         'msg' => '',
-        'errors' => []
+        'errors' => [],
+        'data' => []
       ];
+
     public function __construct()
     {
         $this->db = DB::getConnection();

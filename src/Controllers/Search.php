@@ -19,14 +19,15 @@ class Search extends Controller
         //all variables will be passed to the view
       
         $search = $_POST['search'] ?? $_GET['search'];
-        $perPage = $_GET['perPage'] ?? 6;
-        $pages = $this->model->countPages($search, $perPage); 
-        $page = $_GET['page'] ?? 1;
+        
         if (!$search) {
             header('location:\index.php');
         }
-
+        $perPage = $_GET['perPage'] ?? 6;
+        $page = $_GET['page'] ?? 1;
         $result = $this->model->index($search, $page, $perPage);
+        $pages = $this->model->countPages($search, $perPage); 
+
         
         if (isset($result['message'])) {
             $this->renderView('main', 'index', $result);

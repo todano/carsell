@@ -3,7 +3,6 @@
   <?php require_once('header.php');?>
   <body>
     <h1 class="container text-center p-3 mb-2 bg-light"> <?= $car['brand'].' '.$car['model'] ?> </h1>
-
       <div class="container text-center p-3 mb-2 bg-light">
         <div class="row justify-content-center p-3 mb-2">
         <div class="col-4">

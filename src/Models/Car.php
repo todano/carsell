@@ -27,7 +27,7 @@ class Car extends Model
     $this->model = ucwords(strtolower(trim($car['model'])));
     $this->year = trim($car['year']);
     $this->mileage = trim($car['mileage']);
-    $this->price = '$' . trim($car['price']);
+    $this->price = '€' . trim($car['price']);
     $this->fuel = ucwords(strtolower(trim($car['fuel'])));
     $this->hp = (int) trim($car['hp']);
     if(is_float($car['cubic'])){
@@ -55,25 +55,37 @@ class Car extends Model
                   `category`,
                   `transmission`) 
               VALUES 
-                ('{$userId}',
-                '{$this->brand}',
-                '{$this->model}',
-                '{$this->year}',
-                '{$this->mileage}',
-                '{$this->price}',
+                (':userId',
+                ':brand',
+                ':model',
+                ':year',
+                ':mileage',
+                ':price',
                   NOW(),
                   NOW(),
-                '{$this->fuel}',
-                '{$this->hp}',
-                '{$this->cubic}',
-                '{$this->category}',
-                '{$this->transmission}'
+                ':fuel',
+                ':hp',
+                ':cubic',
+                ':category',
+                ':transmission'
                 )";
     $query = $this->db->prepare($sql);
+    $query->bindParam(':userId', $userId,
+                      ':brand', $this->brand,
+                      ':model', $this->model,
+                      ':year', $this->year,
+                      ':mileage', $this->mileage,
+                      ':price', $this->price,
+                      ':fuel', $this->fuel, 
+                      ':hp', $this->hp, 
+                      ':cubic', $this->cubic, 
+                      ':category', $this->category, 
+                      ':transmission', $this->transmission
+                    );
     $query->execute();
     $carId = $this->db->lastInsertId();
     } catch (PDOException $e){
-      $this->response['message'] = "There was some error, please contact with us.";
+      $this->response['msg'] = "There was some error, please contact with us.";
       $this->response['errors'][] = $sql . "<br>" . $e->getMessage();
     }
     
@@ -90,8 +102,10 @@ class Car extends Model
         }
       }
       if($defaultImg){
-        $sql = "UPDATE `cars` SET default_image = '{$defaultImg}' WHERE car_id = '{$carId}'";
+        $sql = "UPDATE `cars` SET default_image = ':defaultImg' WHERE car_id = ':carId'";
         $query = $this->db->prepare($sql);
+        $query->bindParam(':defaultImg', $defaultImg,
+                          ':carId', $carId);
         $query->execute();
       }
     }
@@ -121,7 +135,7 @@ class Car extends Model
     } else {
       $this->response['errors'][] = "Please choose a file!";
     }
-    $this->response['message'] = "Successfully uploaded";
+    $this->response['msg'] = "Successfully uploaded";
 
     return $imgName;
   }
@@ -140,13 +154,13 @@ class Car extends Model
       $from *= $perPage;
     }
 
-    $sql = "SELECT * FROM `cars`";
-    if($role != 'admin'){
-      $sql.= " WHERE verified != 0 ";
-    } 
+    $sql = "SELECT * FROM `cars` WHERE 1=1";
     if ($id) {
-      $sql .= " AND `car_id` = {$id}";
+      $sql .= " AND car_id = {$id}";
     }
+    if($role != 'admin'){
+      $sql.= " AND verified != 0 ";
+    } 
     
     $sql .= " LIMIT {$from},{$perPage}";
     $query = $this->db->prepare($sql);
@@ -173,13 +187,18 @@ class Car extends Model
   }
 
   public function verify($verify){
-    $verify = str_replace('on',1,$verify);
+    $carId = [];
+    //TODO cast key value as int
     foreach ($verify as $key => $value){
-      $sql = "UPDATE `cars` SET verified = $value WHERE car_id = {$key}";
-      $query = $this->db->prepare($sql);
-      $query->execute();
-      // $result[] = $query->fetchAll(\PDO::FETCH_ASSOC);
+      if($value == 'on'){
+        $carId[] = $key ; 
+      }
     }
+ 
+    $carVer = join(',',$carId);
+    $sql = "UPDATE `cars` SET verified = 1 WHERE car_id IN ({$carVer})";
+    $query = $this->db->prepare($sql);
+    $query->execute();
     return;
   }
 }
