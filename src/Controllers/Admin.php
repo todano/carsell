@@ -31,7 +31,9 @@ class Admin extends Controller
       'cars' => $cars,
       'page' => $page,
       'perPage' => $perPage,
-      'pages' => $pages
+      'pages' => $pages,
+      'controller' => 'admin',
+      'method' => 'cars'
     ]);
   }
   public function showCar(int $id){
@@ -39,7 +41,9 @@ class Admin extends Controller
     $user = $this->loginController->getUser($car['user_id'])[0];
     $this->renderView('admin', 'show',[
       'car' => $car,
-      'user' => $user
+      'user' => $user,
+      'controller' => 'admin',
+      'method' => 'showCar'
     ]);
   }
   public function verCars(){
@@ -48,6 +52,9 @@ class Admin extends Controller
     $this->cars(); //TODO return response 
   }
 
+  public function deleteCar(int $id){
+    $this->carsController->delete($id);
+  }
   // public function getCars($id = NULL, $page = 1, $perPage = 6){
   //   $page = $_GET['page'] ?? 1;
   //   $perPage = $_GET['perPage'] ?? 6;

@@ -32,4 +32,9 @@ class Cars extends Controller
   public function verify($verify){
     return $this->model->verify($verify);
   }
+
+  public function delete($id){
+    $this->model->delete($id);
+    header('location:/');
+  }
 }

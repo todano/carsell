@@ -115,7 +115,7 @@ class Car extends Model
   private function imgVer($name, $tmpName, $size, $id)
   {
     $maxSize = 2097152;
-    $location = 'src' . DS . 'img' . DS . $id; //directory to save imges
+    $location = 'src'.DS.'img'.DS.'cars'.DS. $id; //directory to save imges
     $extension = strtolower(substr($name, strpos($name, '.') + 1)); //takes file extention and makes it with small letter
     $imgName = uniqid() . '.' . $extension;
     $imgPath = $location . DS . $imgName;
@@ -199,6 +199,19 @@ class Car extends Model
     $sql = "UPDATE `cars` SET verified = 1 WHERE car_id IN ({$carVer})";
     $query = $this->db->prepare($sql);
     $query->execute();
+    return;
+  }
+
+  public function delete($id){
+    $location = 'src'.DS.'img'.DS.'cars'.DS. $id;
+
+    $sql = "DELETE FROM `cars` WHERE car_id = ?";
+    $query = $this->db->prepare($sql);
+    $query->execute([$id]);
+    //TODO remove directory after delete a car.
+    if(is_dir($location)){
+      rmdir($location);
+    }
     return;
   }
 }

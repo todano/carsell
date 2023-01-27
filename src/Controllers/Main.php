@@ -24,7 +24,9 @@ class Main extends Controller
       'cars' => $cars,
       'page' => $page,
       'perPage' => $perPage,
-      'pages' => $pages
+      'pages' => $pages,
+      'controller' => 'main',
+      'method' => 'index'
     ]);
   }
   public function show($id){
@@ -32,7 +34,9 @@ class Main extends Controller
     $user = Login::getUser($car['user_id'])[0];
     $this->renderView('main', 'show',[
       'car' => $car,
-      'user' => $user
+      'user' => $user,
+      'controller' => 'main',
+      'method' => 'show'
     ]);
   }
 }

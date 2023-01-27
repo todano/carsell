@@ -25,11 +25,11 @@ class Search extends Controller
         }
         $perPage = $_GET['perPage'] ?? 6;
         $page = $_GET['page'] ?? 1;
-        $result = $this->model->index($search, $page, $perPage);
+        $result = $this->model->index($search, $page, $perPage,$role = 'user');
         $pages = $this->model->countPages($search, $perPage); 
 
         
-        if (isset($result['message'])) {
+        if (isset($result['msg'])) {
             $this->renderView('main', 'index', $result);
         }
         $this->renderView('main', 'index',[

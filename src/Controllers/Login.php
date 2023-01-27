@@ -54,6 +54,11 @@ class Login extends Controller
 
     return $users;
   }
+
+  public function show(){
+    $user = $_SESSION;
+    $this->renderView('users', 'show', $user);
+  }
   public function destroy(){
     session_destroy();
     header('location: /');

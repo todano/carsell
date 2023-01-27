@@ -10,7 +10,7 @@
   <nav class="navbar navbar-expand-lg bg-info">
     <div class="container-fluid">
       <?php if($_SESSION) :?>
-        <a class="navbar-brand" href="#"><?= $_SESSION['name'] ?></a>
+        <a class="navbar-brand" href="/login/show/"><?= $_SESSION['name'] ?></a>
       <?php else :?>  
         <a class="navbar-brand" href="#">WELCOME</a>
       <?php endif ; ?>  
