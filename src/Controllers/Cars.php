@@ -34,7 +34,23 @@ class Cars extends Controller
   }
 
   public function delete($id){
-    $this->model->delete($id);
-    header('location:/');
+    $car = $this->getCars($id)[0];
+    $user = Login::getUser($car['user_id'])[0];
+    $result = $this->model->delete($id);
+    
+    $this->setResponse($result['msg'], $result['errors']);
+    $this->getResponse();
+    
+    if(empty($this->response['errors'])){
+      header("location:/?msg='Your add is deleted'");
+    } 
+    
+    $this->renderView('main', 'show', [
+      'car' => $car,
+      'user' => $user,
+      'controller' => 'main',
+      'method' => 'show',
+      'msg' => $this->response['msg']
+    ]);
   }
 }

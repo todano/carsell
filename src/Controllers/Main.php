@@ -17,7 +17,6 @@ class Main extends Controller
     $page = $_GET['page'] ?? 1;
     $perPage = $_GET['perPage'] ?? 6;
     $pages = $this->carsController->model->countPages($perPage);
-   
     $cars = $this->carsController->getCars();
     // include BASE_PATH.DS.'src'.DS.'Views'.DS.'main'.DS.'index.php';
     $this->renderView('main','index',[
@@ -38,5 +37,8 @@ class Main extends Controller
       'controller' => 'main',
       'method' => 'show'
     ]);
+  }
+  public function deleteCar(int $id){
+    $this->carsController->delete($id);
   }
 }

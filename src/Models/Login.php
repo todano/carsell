@@ -70,7 +70,7 @@ class Login extends Model
       $query->execute([':email' => $this->email]);
       $this->response['data'] = $query->fetch(\PDO::FETCH_ASSOC);
       $this->response['msg'] = "Account has ben created successfully!";
-    } catch (PDOException $e) {
+    } catch (\PDOException $e) {
       $this->response['msg'] = "There was some error, please contact with us.";
       $this->response['errors'][] = $sql . "<br>" . $e->getMessage();
     }

@@ -1,11 +1,13 @@
-<?php //echo '<pre>'; print_r($data);  ?>
+<?php //echo '<pre>'; print_r($_GET);  ?>
 <!doctype html>
 <html>
   <?php require_once('header.php');?>
   <body>
+    <?php if(isset($_GET['msg'])) :?>
+      <h5 class="text-success"><?= $_GET['msg']; ?></h5>
+    <?php endif ;?> 
     <h2 class="text-center"> Here you can choose between many models, which will fits best to you</h2>
     <?php require_once('perPage.php'); ?>
-   
     <?php if(empty($data['cars']['msg']))  :?>
       <?php foreach ($cars as $key => $car) :?>
         <?php if(($key)%3==0):?>

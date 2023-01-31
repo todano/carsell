@@ -2,6 +2,8 @@
 
 namespace Tod\Models;
 
+use PDOException;
+
 class Car extends Model
 {
   private $brand;
@@ -89,7 +91,6 @@ class Car extends Model
       $this->response['errors'][] = $sql . "<br>" . $e->getMessage();
     }
     
-
     if (!empty($car['img'])) {
       $defaultImg = NULL;
       foreach ($car['img']['name'] as $key => $val) {
@@ -101,6 +102,7 @@ class Car extends Model
           $defaultImg = $imgPath;
         }
       }
+
       if($defaultImg){
         $sql = "UPDATE `cars` SET default_image = ':defaultImg' WHERE car_id = ':carId'";
         $query = $this->db->prepare($sql);
@@ -204,14 +206,27 @@ class Car extends Model
 
   public function delete($id){
     $location = 'src'.DS.'img'.DS.'cars'.DS. $id;
-
-    $sql = "DELETE FROM `cars` WHERE car_id = ?";
-    $query = $this->db->prepare($sql);
-    $query->execute([$id]);
-    //TODO remove directory after delete a car.
-    if(is_dir($location)){
-      rmdir($location);
-    }
-    return;
+       
+    try{
+      $sql = "DELETE FROM `cars` WHERE car_id = ?";
+      $query = $this->db->prepare($sql);
+      $query->execute([$id]);
+    } catch (PDOException $e){
+      $this->response['msg'] = 'This add cannot be deleted!';
+      $this->response['errors'] = $sql . "<br>" . $e->getMessage();
+    } 
+    
+    if(is_dir($location) && empty($this->response['errors'])){
+      $files = scandir($location);
+      foreach ($files as $file){
+        if(is_file($location.DS.$file)){
+          unlink($location.DS.$file);
+        }
+      }
+      if(is_dir($location)){
+        rmdir($location);
+      }
+    }  
+    return $this->response;
   }
 }
