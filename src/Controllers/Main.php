@@ -25,7 +25,9 @@ class Main extends Controller
       'perPage' => $perPage,
       'pages' => $pages,
       'controller' => 'main',
-      'method' => 'index'
+      'method' => 'index',
+      'msg' => '',
+      'error' => 0
     ]);
   }
   public function show($id){

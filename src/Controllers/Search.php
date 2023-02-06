@@ -14,10 +14,7 @@ class Search extends Controller
         parent::__construct(SearchM::class);
     }
 
-    public function index($search = NULL, $page = 1, $perPage = 6)
-    {
-        //all variables will be passed to the view
-      
+    public function index($search = NULL, $page = 1, $perPage = 6){
         $search = $_POST['search'] ?? $_GET['search'];
         
         if (!$search) {
@@ -37,7 +34,9 @@ class Search extends Controller
             'page' => $page,
             'perPage' => $perPage,
             'search' => $search,
-            'pages' => $pages
+            'pages' => $pages,
+            'controller' => 'search',
+            'method' => 'index'
         ]);
     }
 }

@@ -21,7 +21,7 @@ DEFINE('CONTROLLER_PATH',BASE_PATH.DS.'src'.DS.'Controllers'.DS);
 // echo '<pre>'; print_r($_SERVER);  die;
 $url = $_SERVER['REQUEST_URI'];
 $urlParts = array_filter(explode('/',$url));
-// echo '<pre>'; print_r($urlParts); 
+// echo '<pre>'; print_r($urlParts); die; 
 $controller = $urlParts[1] ?? DEFAULT_CONTROLLER;
 $controller = ucFirst(strtolower($controller));
 $controllerFile = $controller.'.php';

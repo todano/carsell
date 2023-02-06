@@ -13,9 +13,9 @@ class Controller
   {
       $this->model = new $model;
   }
-  public function renderView($dir, $file, array $data=[]){
+  public function renderView($dir, $file, array $data=[], $layout = 'basic'){
     extract($data);//extract key values of the array into variables
-    include BASE_PATH.DS.'src'.DS.'Views'.DS.$dir.DS.$file.'.php';
+    include BASE_PATH.DS.'src'.DS.'Views'.DS.'layout'.DS.$layout.'.php';
   }
 
   public function setResponse($msg = '', $errors = []){

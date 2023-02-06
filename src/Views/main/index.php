@@ -1,12 +1,14 @@
-<?php //echo '<pre>'; print_r($_GET);  ?>
-<!doctype html>
-<html>
-  <?php require_once('header.php');?>
-  <body>
+    <div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          <?= $data['msg'] ;?>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
     <?php if(isset($_GET['msg'])) :?>
       <h5 class="text-success"><?= $_GET['msg']; ?></h5>
     <?php endif ;?> 
-    <h2 class="text-center"> Here you can choose between many models, which will fits best to you</h2>
     <?php require_once('perPage.php'); ?>
     <?php if(empty($data['cars']['msg']))  :?>
       <?php foreach ($cars as $key => $car) :?>
@@ -30,5 +32,4 @@
       </div>  
     <?php endif ;?>  
     <?php require_once('pagination.php'); ?>
-  </body>
-</html>
+ 

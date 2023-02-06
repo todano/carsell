@@ -144,12 +144,13 @@ class Car extends Model
 
   public function getCars($id, $page, $perPage, $role)
   {
-    if (isset($_GET['page'])) {
-      $page = (int) $_GET['page'];
-    }
-    if (isset($_GET['perPage'])) {
-      $perPage = (int) $_GET['perPage'];
-    }
+    //TODO pass these values from controller
+    // if (isset($_GET['page'])) {
+    //   $page = (int) $_GET['page'];
+    // }
+    // if (isset($_GET['perPage'])) {
+    //   $perPage = (int) $_GET['perPage'];
+    // }
 
     $from = ($page - 1);
     if ($from > 0) {

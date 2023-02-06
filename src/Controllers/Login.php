@@ -42,6 +42,7 @@ class Login extends Controller
      
   }
   public static function getUser($id = NULL){
+    //TODO this is for model.
     $con = \Tod\Helpers\Database::getConnection();
     $sql = "SELECT * FROM `users`";
     if($id){

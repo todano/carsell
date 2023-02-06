@@ -1,7 +1,9 @@
-<?php //echo '<pre>'; print_r($_SESSION); ?>
+<?php //echo '<pre>'; print_r($data); ?>
 <head >
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css" rel="stylesheet">
   <title class="text center">Welcome to our website for best cars</title>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -37,13 +39,16 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/cars/create">Add advertisment</a></li>
               <?php if(isset($_SESSION) && $_SESSION['role'] == 'admin' ) :?>
-                <li><a class="dropdown-item" href="/admin/cars/">Admin panel</a></li>
+                <li><a class="dropdown-item" href="/admin/cars/?layout='admin">Admin panel</a></li>
               <?php endif ;?>
               <li><hr class="dropdown-divider"></li>
               <li><a class="nav-link" href="/login/destroy">Logout</a></li>
             </ul>
           </li>
           <?php endif ;?>
+          <li class="nav-item">
+            <h5 class="text-center text-sm px-4"> Here you can choose between many models, which will fits best to you</h5>
+          </li>
         </ul>
         <form method="POST" action="/search/index/" class="d-flex" role="search">
           <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

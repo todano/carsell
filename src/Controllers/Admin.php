@@ -34,7 +34,8 @@ class Admin extends Controller
       'pages' => $pages,
       'controller' => 'admin',
       'method' => 'cars'
-    ]);
+    ],
+    'admin');
   }
   public function showCar(int $id){
     $car = $this->carsController->getCars( id: $id, role:'admin')[0];
@@ -44,7 +45,8 @@ class Admin extends Controller
       'user' => $user,
       'controller' => 'admin',
       'method' => 'showCar'
-    ]);
+    ],
+    'admin');
   }
   public function verCars(){
     $verify = $_POST['verified'] ?? '';

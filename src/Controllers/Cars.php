@@ -11,6 +11,12 @@ class Cars extends Controller
   }
   
   public function getCars($id = NULL, $page = 1, $perPage = 6, $role = 'user'){
+    if (isset($_GET['page'])) {
+      $page = (int) $_GET['page'];
+    }
+    if (isset($_GET['perPage'])) {
+      $perPage = (int) $_GET['perPage'];
+    }
     return $this->model->getCars($id, $page, $perPage, $role);
   }
 
@@ -42,7 +48,7 @@ class Cars extends Controller
     $this->getResponse();
     
     if(empty($this->response['errors'])){
-      header("location:/?msg='Your add is deleted'");
+      $this->renderView('main', 'index', ['msg' => 'Your add is deleted']);
     } 
     
     $this->renderView('main', 'show', [
@@ -50,7 +56,8 @@ class Cars extends Controller
       'user' => $user,
       'controller' => 'main',
       'method' => 'show',
-      'msg' => $this->response['msg']
+      'msg' => $this->response['msg'],
+      'error' => 1
     ]);
   }
 }
