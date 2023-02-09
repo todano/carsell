@@ -11,21 +11,95 @@ class Login extends Controller
     parent::__construct(MLogin::class);
   }
   
+  public function index($page = 1, $perPage = 6, $role = 'user'){
+    if (isset($_GET['page'])) {
+      $page = (int) $_GET['page'];
+    }
+    if (isset($_GET['perPage'])) {
+      $perPage = (int) $_GET['perPage'];
+    }
+    $pages = $this->model->countPages($perPage, $role = 'user');
+    $users = $this->model->getUsers(page: $page, perPage: $perPage, role: $role);
+    $this->renderView('users', 'index', [
+      'users' => $users,
+      'page' => $page,
+      'perPage' => $perPage,
+      'pages' => $pages,  
+      'controller' => 'login',
+      'method' => 'index'
+    ]);
+  }
+  public function show(int $id, $response = []){
+    $user = $this->model->getUser(id: $id);    
+    if($response){
+      $this->renderView('users', 'show', [
+        'user' => $user['data'],
+        'msg' => $response['msg'],
+        'controller' => 'login',
+        'method' => 'show'
+      ]);
+    } else if(!$user['ver']){
+      $this->renderView('users', 'show', [
+        'msg' => 'Your account isnt confirm yet!',
+        'user' => $user['data'],
+        'errors' => true,
+        'controller' => 'login',
+        'method' => 'show'
+      ]);
+    } else {
+      $this->renderView('users', 'show', [
+        'user' => $user['data'],
+      ]);
+    }
+  }
+
   public function create(){
     $this->renderView('users','register');
   }
+
   public function store(){
-    $credentials = $_POST;  
+    $credentials = $_POST; 
+    if($_FILES){
+      $credentials['img'] = $_FILES['my_file'];
+    }
     $response = $this->model->storeToDB($credentials);
-    $user = $response['data'];
-    $_SESSION = $this->model->except($user, ['password']);
-    
+    if($response['errors']){
+      $this->renderView('users','register',[
+        'msg' => $response['msg'],
+        'errors' => $response['errors']
+    ]);
+    } else {
+      $user = $response['data'];
+      $_SESSION = $this->model->except($user, ['password']);
+      $this->renderView('users', 'show',[
+              'user' => $user
+      ]);
+    }
+  }  
+
+  public function edit(int $id){
+    $user = $this->model->getUser(id: $id);
+    $user = $this->model->except($user, ['password']);
+    $this->renderView('users', 'edit', [
+      'user' => $user['data']
+    ]);
+  }
+
+  public function update(int $id){
+    $credentials = $_POST;  
+    $response = $this->model->UpdateDB($id, $credentials);
     if(!$response['errors']){
-      header('location:/');
+      $this->show($id, $response);
     } else{
-      $this->renderView('users','register',$response);
+      $user = $user = $this->model->getUser(id: $id);
+      $this->renderView('users','edit', [
+        'user' => $user['data'],
+        'msg'=> $response['msg'],
+        'errors' => $response['errors']
+      ]);
     }
   }
+  
   public function sign(){
     $this->renderView('users','signIn');
   }
@@ -39,29 +113,60 @@ class Login extends Controller
       $this->setResponse($e->getMessage());
       $this->renderView('users','signIn',$this->getResponse());
     } 
-     
   }
-  public static function getUser($id = NULL){
-    //TODO this is for model.
-    $con = \Tod\Helpers\Database::getConnection();
-    $sql = "SELECT * FROM `users`";
-    if($id){
-      $sql.=" WHERE `id` = {$id}";
-    }
-    $sql.=" LIMIT 3";
-    $query = $con->prepare($sql);
-    $query->execute();
-    $users = $query->fetchAll(\PDO::FETCH_ASSOC);
-
-    return $users;
-  }
-
-  public function show(){
-    $user = $_SESSION;
-    $this->renderView('users', 'show', $user);
+  
+  public function verifyUsers($verify){
+    return $this->model->verifyUsers($verify);
   }
   public function destroy(){
     session_destroy();
     header('location: /');
+  }
+
+  public function editPassword(int $id){
+    $user = $this->model->getUser(id: $id);
+    $user = $this->model->except($user['data'], ['password']);
+    $this->renderView('users', 'editPassword',[
+      'user' => $user
+    ]);
+  }
+
+  public function updatePassword(int $id){
+    $passwords = $_POST; 
+    $response = $this->model->updatePassword($id, $passwords);
+    // echo '<pre>'; print_r($response); die;
+    if(!$response['errors']){
+      $this->show($id, $response);
+    } else{
+      $user = $this->model->getUser(id: $id);
+      $this->renderView('users','editPassword', [
+        'user' => $user['data'],
+        'msg'=> $response['msg'],
+        'errors' => $response['errors']
+      ]);
+    }
+  }
+
+  public function editEmail(int $id){
+    $user = $this->model->getUser(id: $id);
+    $user['data'] = $this->model->except($user['data'], ['password']);
+    $this->renderView('users', 'editEmail',[
+      'user' => $user['data']
+    ]);
+  }
+
+  public function updateEmail(int $id){
+    $email = $_POST['email']; 
+    $response = $this->model->updateEmail($id, $email);
+    if(!$response['errors']){
+      $this->show($id, $response);
+    } else{
+      $user = $this->model->getUser(id: $id);
+      $this->renderView('users','editEmail', [
+        'user' => $user['data'],
+        'msg'=> $response['msg'],
+        'errors' => $response['errors']
+      ]);
+    }
   }
 }

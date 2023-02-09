@@ -1,15 +1,20 @@
 <?php
 namespace Tod\Controllers;
 use Tod\Models\Car as MCar;
+use Tod\Models\Login as Mlog;
 
 class Main extends Controller
 {
   protected $carsController;
+  protected $loginController;
 
   public function __construct()
   {
     $this->carsController = new Cars;
     parent::__construct(MCar::class);
+
+    $this->loginController = new Login;
+    parent::__construct(Mlog::class);
   }
   
   public function index(){
@@ -32,7 +37,7 @@ class Main extends Controller
   }
   public function show($id){
     $car = $this->carsController->getCars($id)[0];
-    $user = Login::getUser($car['user_id'])[0];
+    $user = $this->loginController->model->getUser($car['user_id'])[0];
     $this->renderView('main', 'show',[
       'car' => $car,
       'user' => $user,

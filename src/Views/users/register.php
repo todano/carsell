@@ -1,13 +1,14 @@
 <?php if(!empty($data)) :?>
 <div>
-<?php foreach ($data['errors'] as $key => $value) : ?>
-  <div>
-    <?= $key.':'.$value ?>
+<?php foreach ($data['msg'] as $key => $value) : ?>
+  <div class='text-danger'>
+    <h5><?= $key.':'.$value ?></h5>
   </div>
 <?php endforeach ;?>
 </div>
 <?php endif ; ?>
-<form  method="POST" action="/login/store/" class="row g-3 vstack gap-2 col-md-7 mx-auto needs-validation bg-light border border-primary rounded p-2 mb-2 mt-4">
+<form  method="POST" action="/login/store/" enctype="multipart/form-data" 
+       class="row g-3 vstack gap-2 col-md-7 mx-auto needs-validation bg-light border border-primary rounded p-2 mb-2 mt-4">
   <div>
     <h3 class='text-center'>Register</h3>
   </div>
@@ -42,6 +43,12 @@
   <div class="col-md-5">
     <label for="validationDefault03" class="form-label">City</label>
     <input type="text" name="city" class="form-control" id="validationDefault03" required>
+  </div>
+  <div class="col-md-4 position-relative">
+      <div class="col-md-2 position-absolute top-0 start-0" style="font-size:12px;">
+          <label for="file"><img src="/src/img/default.jpg" class="rounded mx-auto d-block" width="80" height="100"></label>
+          <input id="file" type="file" name="my_file[]" multiple style="display: none">
+      </div>
   </div>
   <div class="col-6">
     <div class="form-check pt-5">

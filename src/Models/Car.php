@@ -93,11 +93,12 @@ class Car extends Model
     
     if (!empty($car['img'])) {
       $defaultImg = NULL;
+      $dir = 'cars';
       foreach ($car['img']['name'] as $key => $val) {
         $name = $car['img']['name'][$key];
         $tmpName = $car['img']['tmp_name'][$key];
         $size = $car['img']['size'][$key];
-        $imgPath = $this->imgVer($name, $tmpName, $size, $carId);
+        $imgPath = $this->imgVer($name, $tmpName, $size, $dir, $carId);
         if(!$defaultImg){
           $defaultImg = $imgPath;
         }
@@ -114,33 +115,7 @@ class Car extends Model
     return $this->response;
   }
 
-  private function imgVer($name, $tmpName, $size, $id)
-  {
-    $maxSize = 2097152;
-    $location = 'src'.DS.'img'.DS.'cars'.DS. $id; //directory to save imges
-    $extension = strtolower(substr($name, strpos($name, '.') + 1)); //takes file extention and makes it with small letter
-    $imgName = uniqid() . '.' . $extension;
-    $imgPath = $location . DS . $imgName;
-
-    if (!empty($name)) {
-      //condition if the file extention and size are as they should be.
-      if (in_array($extension, ['jpg', 'jpeg', 'image/jpeg']) && $size < $maxSize) {
-        if (!is_dir($location)) {
-          mkdir($location);
-        }
-        if (!move_uploaded_file($tmpName, $imgPath)) {
-          $this->response['errors'][] = 'File cannot be moved';
-        }
-      } else {
-        $this->response['errors'][] = "The image should be less than 2Mb!";
-      }
-    } else {
-      $this->response['errors'][] = "Please choose a file!";
-    }
-    $this->response['msg'] = "Successfully uploaded";
-
-    return $imgName;
-  }
+ 
 
   public function getCars($id, $page, $perPage, $role)
   {

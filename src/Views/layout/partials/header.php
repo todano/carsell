@@ -12,7 +12,7 @@
   <nav class="navbar navbar-expand-lg bg-info">
     <div class="container-fluid">
       <?php if($_SESSION) :?>
-        <a class="navbar-brand" href="/login/show/"><?= $_SESSION['name'] ?></a>
+        <a class="navbar-brand" href="/login/show/<?= $_SESSION['id'] ?>"><?= $_SESSION['name'] ?></a>
       <?php else :?>  
         <a class="navbar-brand" href="#">WELCOME</a>
       <?php endif ; ?>  
@@ -39,11 +39,14 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/cars/create">Add advertisment</a></li>
               <?php if(isset($_SESSION) && $_SESSION['role'] == 'admin' ) :?>
-                <li><a class="dropdown-item" href="/admin/cars/?layout='admin">Admin panel</a></li>
+                <li><a class="dropdown-item" href="/admin/cars/">Admin panel</a></li>
               <?php endif ;?>
               <li><hr class="dropdown-divider"></li>
               <li><a class="nav-link" href="/login/destroy">Logout</a></li>
             </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/login/index/">Users</a>
           </li>
           <?php endif ;?>
           <li class="nav-item">

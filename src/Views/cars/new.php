@@ -51,10 +51,10 @@
                 <input id="transmission" input="text" name="transmission"> 
             </div>
             <div class="col-md-4 position-relative">
-                    <div class="col-md-2 position-absolute top-0 start-0" style="font-size:12px;">
-                        <label for="file"><img src="/src/img/default.jpg" class="rounded mx-auto d-block" width="80" height="100"></label>
-                        <input id="file" type="file" name="my_file[]" multiple style="display: none">
-                    </div>
+                <div class="col-md-2 position-absolute top-0 start-0" style="font-size:12px;">
+                    <label for="file"><img src="/src/img/default.jpg" class="rounded mx-auto d-block" width="80" height="100"></label>
+                    <input id="file" type="file" name="my_file[]" multiple style="display: none">
+                </div>
             </div>
           </div>  
             <div class="col-md-4">

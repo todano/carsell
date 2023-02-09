@@ -38,8 +38,7 @@ if((!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') && $controller ==
 }
 $initController = "Tod\\Controllers\\".$controller;
 $app = new $initController();
-
-
+// echo '<pre>'; print_r($urlParts); die;
 //call method from the object with params
 call_user_func_array(array($app, $method), $urlParts);
 

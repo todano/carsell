@@ -21,13 +21,12 @@ class Admin extends Controller
   //     $this->renderView('admin', 'index');
   // }
 
-  public function cars($response = ''){
+  public function cars(){   
     $page = $_GET['page'] ?? 1;
     $perPage = $_GET['perPage'] ?? 6;
     $pages = $this->carsController->model->countPages($perPage, $role = 'admin');
     $cars = $this->carsController->getCars(role: 'admin');
-
-    $this->renderView('admin', 'index', [
+    $this->renderView('admin', 'indexCar', [
       'cars' => $cars,
       'page' => $page,
       'perPage' => $perPage,
@@ -39,12 +38,12 @@ class Admin extends Controller
   }
   public function showCar(int $id){
     $car = $this->carsController->getCars( id: $id, role:'admin')[0];
-    $user = $this->loginController->getUser($car['user_id'])[0];
-    $this->renderView('admin', 'show',[
-      'car' => $car,
-      'user' => $user,
-      'controller' => 'admin',
-      'method' => 'showCar'
+    $user = $this->loginController->model->getUser($car['user_id'], $page = 1, $perPage = 6, $role = 'admin')[0];
+    $this->renderView('admin', 'showCar',[
+    'car' => $car,
+    'user' => $user,
+    'controller' => 'admin',
+    'method' => 'showCar'
     ],
     'admin');
   }
@@ -57,12 +56,35 @@ class Admin extends Controller
   public function deleteCar(int $id){
     $this->carsController->delete($id);
   }
-  // public function getCars($id = NULL, $page = 1, $perPage = 6){
-  //   $page = $_GET['page'] ?? 1;
-  //   $perPage = $_GET['perPage'] ?? 6;
-  //   $pages = $this->carsController->model->countPages($perPage);
-    
-  //   $cars = $this->carsController->getCars();
-  //   $this->model->getCars();
-  // }
+
+  public function users($response = ''){
+    $page = $_GET['page'] ?? 1;
+    $perPage = $_GET['perPage'] ?? 6;
+    $pages = $this->loginController->model->countPages($perPage, $role = 'admin');
+    $users = $this->loginController->model->getUser($id = NULL, $page = 1, $perPage = 6, $role = 'admin');
+    $this->renderView('admin', 'indexUser', [
+      'users' => $users,
+      'page' => $page,
+      'perPage' => $perPage,
+      'pages' => $pages,
+      'controller' => 'admin',
+      'method' => 'users'
+    ],
+    'admin');
+  }
+  public function showUser(int $id){
+    $user = $this->loginController->model->getUser($id, $page = 1, $perPage = 6, $role = 'admin')[0];
+    $this->renderView('admin', 'showUser', [
+      'user' => $user,
+      'controller' => 'admin',
+      'method' => 'users'
+    ],
+    'admin');
+  }
+
+  public function verUsers(){
+    $verify = $_POST['verified'] ?? '';
+    $this->loginController->verifyUsers($verify);
+    $this->users(); //TODO return response 
+  }
 }
