@@ -22,8 +22,10 @@ class Main extends Controller
     $page = $_GET['page'] ?? 1;
     $perPage = $_GET['perPage'] ?? 6;
     $pages = $this->carsController->model->countPages($perPage);
-    $cars = $this->carsController->getCars();
+    $cars = $this->carsController->getCars(page: $page, perPage: $perPage);
     // include BASE_PATH.DS.'src'.DS.'Views'.DS.'main'.DS.'index.php';
+    $this->getResponse();
+    //echo '<pre>'; print_r($this->response); die;
     $this->renderView('main','index',[
       'cars' => $cars,
       'page' => $page,
@@ -31,21 +33,59 @@ class Main extends Controller
       'pages' => $pages,
       'controller' => 'main',
       'method' => 'index',
-      'msg' => '',
-      'error' => 0
+      'msg' => $this->response['msg'],
+      'error' => $this->response['errors']
     ]);
   }
   public function show($id){
-    $car = $this->carsController->getCars($id)[0];
-    $user = $this->loginController->model->getUser($car['user_id'])[0];
+    $car = $this->carsController->model->getCar($id)[0];
+    $user = $this->loginController->model->getUser($car['user_id']);
     $this->renderView('main', 'show',[
       'car' => $car,
-      'user' => $user,
+      'user' => $user['data'],
       'controller' => 'main',
       'method' => 'show'
     ]);
   }
   public function deleteCar(int $id){
-    $this->carsController->delete($id);
+    $car = $this->carsController->model->getCar($id)[0];
+    $user = $this->loginController->model->getUser($car['user_id']);
+    $result = $this->carsController->delete($id);
+    $this->setResponse($result['msg'], $result['errors']);
+    $this->getResponse();
+    
+    if($this->response['errors'] != true){
+      $this->setResponse('Your add is deleted!');
+      $this->index();
+    } else {
+      $this->renderView('main', 'show', [
+        'car' => $car,
+        'user' => $user['data'],
+        'controller' => 'main',
+        'method' => 'show',
+        'msg' => $this->response['msg'],
+        'error' => $this->response['errors']
+      ]);
+    } 
+  }
+
+  public function deleteUser(int $id){
+    $user = $this->loginController->model->getUser($id);
+    $result = $this->loginController->delete($id);
+    $this->setResponse($result['msg'], $result['errors']);
+    $this->getResponse();
+    if($this->response['errors'] != true){
+      $this->setResponse('Your account is deleted!');
+      $this->loginController->destroy();
+    } else {
+      $this->renderView('main', 'show', [
+        'car' => $car,
+        'user' => $user['data'],
+        'controller' => 'main',
+        'method' => 'show',
+        'msg' => $this->response['msg'],
+        'error' => $this->response['errors']
+      ]);
+    } 
   }
 }

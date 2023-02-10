@@ -6,7 +6,7 @@ class Model
     protected $db;
     protected $response = [
         'msg' => [],
-        'errors' => [],
+        'errors' => false,
         'data' => []
       ];
 
@@ -33,7 +33,7 @@ class Model
         return $result;
     }
 
-    protected function imgVer($name, $tmpName, $size,$dir, $id)
+    protected function imgVer($name, $tmpName, $size, $dir, $id)
     {
       $maxSize = 2097152;
       $location = 'src'.DS.'img'.DS.$dir.DS. $id; //directory to save imges
@@ -59,5 +59,42 @@ class Model
       $this->response['msg'] = "Successfully uploaded";
   
       return $imgName;
+    }
+
+    public function delete($dir, $id){
+      $location = 'src'.DS.'img'.DS.$dir.DS. $id;
+      if($dir == 'cars'){
+        try{
+          $sql = "DELETE FROM `cars` WHERE car_id = ?";
+          $query = $this->db->prepare($sql);
+          $query->execute([$id]);
+        } catch (PDOException $e){
+          $this->response['msg'] = 'This add cannot be deleted!';
+          $this->response['errors'] = $sql . "<br>" . $e->getMessage();
+        }
+      } 
+      if($dir == 'users'){
+        try{
+          $sql = "DELETE FROM `users` WHERE id = ?";
+          $query = $this->db->prepare($sql);
+          $query->execute([$id]);
+        } catch (PDOException $e){
+          $this->response['msg'] = 'This add cannot be deleted!';
+          $this->response['errors'] = $sql . "<br>" . $e->getMessage();
+        }
+      } 
+      
+      if(is_dir($location) && empty($this->response['errors'])){
+        $files = scandir($location);
+        foreach ($files as $file){
+          if(is_file($location.DS.$file)){
+            unlink($location.DS.$file);
+          }
+        }
+        if(is_dir($location)){
+          rmdir($location);
+        }
+      }  
+      return $this->response;
     }
 }

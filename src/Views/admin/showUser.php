@@ -22,11 +22,9 @@
             <?php endif; ?>
             <button class="btn btn-primary" type="submit">Verify</button>
             </div>
-            <?php if($user['id'] == $_SESSION['id']) :?>
             <div class="col">
                 <a href="/login/show/<?= $user['id']?>" class="btn btn-primary">View details</a>
             </div>    
-            <?php endif ; ?>
         </div>
     </div>
 </form>

@@ -19,8 +19,10 @@
     </div>
   </div>
   <div>
-    <?php if($car['user_id'] == $_SESSION['id']) :?>
-      <a href="/<?= $data['controller'] ?>/deleteCar/<?= $car['car_id']?>" class="btn btn-primary">Delete</a>
+    <?php if(isset($_SESSION)) : ?>
+      <?php if($car['user_id'] == $_SESSION['id']) :?>
+        <a href="/<?= $data['controller'] ?>/deleteCar/<?= $car['car_id']?>" class="btn btn-primary">Delete</a>
+      <?php endif ;?>  
     <?php endif ;?>  
   </div>
 </div>

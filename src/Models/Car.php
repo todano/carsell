@@ -117,35 +117,29 @@ class Car extends Model
 
  
 
-  public function getCars($id, $page, $perPage, $role)
+  public function getCars($page, $perPage, $role)
   {
-    //TODO pass these values from controller
-    // if (isset($_GET['page'])) {
-    //   $page = (int) $_GET['page'];
-    // }
-    // if (isset($_GET['perPage'])) {
-    //   $perPage = (int) $_GET['perPage'];
-    // }
-
     $from = ($page - 1);
     if ($from > 0) {
       $from *= $perPage;
     }
-
-    $sql = "SELECT * FROM `cars` WHERE 1=1";
-    if ($id) {
-      $sql .= " AND car_id = {$id}";
-    }
+    $sql = "SELECT * FROM `cars`";
     if($role != 'admin'){
-      $sql.= " AND verified != 0 ";
+      $sql.= " WHERE verified != 0 ";
     } 
-    
     $sql .= " LIMIT {$from},{$perPage}";
     $query = $this->db->prepare($sql);
     $query->execute();
     return $query->fetchAll(\PDO::FETCH_ASSOC);
   }
 
+  public function getCar($id)
+  {
+    $sql = "SELECT * FROM `cars` WHERE car_id = {$id}";
+    $query = $this->db->prepare($sql);
+    $query->execute();
+    return $query->fetchAll(\PDO::FETCH_ASSOC);
+  }
   public function countPages($perPage = 6, $role = 'user')
   {
     $sql = "SELECT COUNT('car_id') FROM `cars`"; 
@@ -180,29 +174,5 @@ class Car extends Model
     return;
   }
 
-  public function delete($id){
-    $location = 'src'.DS.'img'.DS.'cars'.DS. $id;
-       
-    try{
-      $sql = "DELETE FROM `cars` WHERE car_id = ?";
-      $query = $this->db->prepare($sql);
-      $query->execute([$id]);
-    } catch (PDOException $e){
-      $this->response['msg'] = 'This add cannot be deleted!';
-      $this->response['errors'] = $sql . "<br>" . $e->getMessage();
-    } 
-    
-    if(is_dir($location) && empty($this->response['errors'])){
-      $files = scandir($location);
-      foreach ($files as $file){
-        if(is_file($location.DS.$file)){
-          unlink($location.DS.$file);
-        }
-      }
-      if(is_dir($location)){
-        rmdir($location);
-      }
-    }  
-    return $this->response;
-  }
+  
 }

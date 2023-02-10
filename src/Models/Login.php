@@ -210,12 +210,12 @@ class Login extends Model
             ";
     $query = $this->db->prepare($sql);
     $query->execute();
-    $result = $query->fetch(\PDO::FETCH_ASSOC);
+    $user = $query->fetch(\PDO::FETCH_ASSOC);
 
-    if (!password_verify($credits['password'], $result['password'])) {
+    if (!password_verify($credits['password'], $user['password'])) {
       throw new Exception('Password is incorrect');
     }
-    return $result;
+    return $user;
   }
 
   public function getUsers($page = 1, $perPage = 6, $role = 'user'){

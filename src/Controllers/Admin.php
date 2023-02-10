@@ -60,8 +60,9 @@ class Admin extends Controller
   public function users($response = ''){
     $page = $_GET['page'] ?? 1;
     $perPage = $_GET['perPage'] ?? 6;
+    // echo '<pre>'; print_r($page); die;
     $pages = $this->loginController->model->countPages($perPage, $role = 'admin');
-    $users = $this->loginController->model->getUser($id = NULL, $page = 1, $perPage = 6, $role = 'admin');
+    $users = $this->loginController->model->getUsers($page, $perPage, $role);
     $this->renderView('admin', 'indexUser', [
       'users' => $users,
       'page' => $page,
@@ -73,9 +74,9 @@ class Admin extends Controller
     'admin');
   }
   public function showUser(int $id){
-    $user = $this->loginController->model->getUser($id, $page = 1, $perPage = 6, $role = 'admin')[0];
+    $user = $this->loginController->model->getUser($id);
     $this->renderView('admin', 'showUser', [
-      'user' => $user,
+      'user' => $user['data'],
       'controller' => 'admin',
       'method' => 'users'
     ],
@@ -86,5 +87,10 @@ class Admin extends Controller
     $verify = $_POST['verified'] ?? '';
     $this->loginController->verifyUsers($verify);
     $this->users(); //TODO return response 
+  }
+
+  public function deleteUser(int $id){
+    $this->loginController->delete($id);
+    $this->users();
   }
 }

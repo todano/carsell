@@ -107,9 +107,10 @@ class Login extends Controller
     $userCredit = $_POST;
     try{
       $user = $this->model->checkUser($userCredit);
+     
       $_SESSION = $this->model->except($user, ['password']);
       header('location:\index.php');
-    } catch (Exception $e){
+    } catch (Exception $e){ 
       $this->setResponse($e->getMessage());
       $this->renderView('users','signIn',$this->getResponse());
     } 
@@ -168,5 +169,9 @@ class Login extends Controller
         'errors' => $response['errors']
       ]);
     }
+  }
+
+  public function delete(int $id, $dir = 'users'){
+    return $this->model->delete(dir: $dir,id: $id);
   }
 }

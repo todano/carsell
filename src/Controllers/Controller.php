@@ -18,7 +18,7 @@ class Controller
     include BASE_PATH.DS.'src'.DS.'Views'.DS.'layout'.DS.$layout.'.php';
   }
 
-  public function setResponse($msg = '', $errors = []){
+  public function setResponse($msg = [], $errors = false){
     $this->response['msg'] = $msg;
     $this->response['errors'] = $errors;
   }

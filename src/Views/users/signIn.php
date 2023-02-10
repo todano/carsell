@@ -1,3 +1,4 @@
+<?php //echo '<pre>'; print_r($data); die; ?>
 <form  method="POST" action="/login/signIn/" class="row g-3 vstack gap-2 col-md-5 mx-auto bg-light border border-primary rounded p-2 mb-2 mt-4">
   <div>
     <h3 class='text-center'>Login</h3>

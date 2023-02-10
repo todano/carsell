@@ -1,23 +1,25 @@
 <?php
 namespace Tod\Controllers;
 use Tod\Models\Car as MCar;
+use Tod\Models\Login as Mlog;
 
 class Cars extends Controller
 {
+ 
   public function __construct()
   {
     //calling parrent construct, with dedicated model
     parent::__construct(MCar::class);
   }
   
-  public function getCars($id = NULL, $page = 1, $perPage = 6, $role = 'user'){
+  public function getCars($page = 1, $perPage = 6, $role = 'user'){
     if (isset($_GET['page'])) {
       $page = (int) $_GET['page'];
     }
     if (isset($_GET['perPage'])) {
       $perPage = (int) $_GET['perPage'];
     }
-    return $this->model->getCars($id, $page, $perPage, $role);
+    return $this->model->getCars($page, $perPage, $role);
   }
 
   public function create(){
@@ -39,25 +41,7 @@ class Cars extends Controller
     return $this->model->verify($verify);
   }
 
-  public function delete($id){
-    $car = $this->getCars($id)[0];
-    $user = Login::getUser($car['user_id'])[0];
-    $result = $this->model->delete($id);
-    
-    $this->setResponse($result['msg'], $result['errors']);
-    $this->getResponse();
-    
-    if(empty($this->response['errors'])){
-      $this->renderView('main', 'index', ['msg' => 'Your add is deleted']);
-    } 
-    
-    $this->renderView('main', 'show', [
-      'car' => $car,
-      'user' => $user,
-      'controller' => 'main',
-      'method' => 'show',
-      'msg' => $this->response['msg'],
-      'error' => 1
-    ]);
+  public function delete(int $id, $dir = 'cars'){
+    return $this->model->delete(dir: $dir,id: $id);
   }
 }
