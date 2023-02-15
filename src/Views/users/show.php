@@ -2,7 +2,7 @@
 <div class="container text-center p-3 mb-2 bg-light">
   <div class="row justify-content-center p-3 mb-2">
       <div class="col-4">
-        <?php include('userImg.php'); ?>
+        <img src="/<?= $user['imgPath'] ;?>" class="card-img-top" width="100" height="250" alt="...">
       </div>
       <div class="col-4">
           <h5 class="text-start">Username: <?= $user['username'] ?></h5> 
@@ -13,9 +13,9 @@
           <h5 class="text-start">Last update: <?= $user['last_update'] ?></h5> 
       </div>
       <div class="container text-center p-3 mb-2 bg-light">
-        <div class="row justify-content-center p-3 mb-2">
+        <div class="row justify-content-center col-md-8 p-3 mb-2">
             <?php if($user['id'] == $_SESSION['id']) :?>
-            <div class="col">
+            <div class="col-1">
                 <a href="/login/edit/<?= $user['id']?>" class="btn btn-primary">Edit</a>
             </div>    
             <div class="col">

@@ -1,7 +1,7 @@
 <?php
 namespace Tod\Models;
 use Tod\Helpers\Database as DB;
-class Model
+abstract class Model
 {
     protected $db;
     protected $response = [
@@ -9,7 +9,8 @@ class Model
         'errors' => false,
         'data' => []
       ];
-
+    
+    abstract public function countPages($perPage = 6, $role = 'user');  
     public function __construct()
     {
         $this->db = DB::getConnection();

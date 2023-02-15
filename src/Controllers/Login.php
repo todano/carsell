@@ -4,7 +4,7 @@ namespace Tod\Controllers;
 use Exception;
 use \Tod\Models\Login as MLogin;
 
-class Login extends Controller
+class Login extends Controller implements Methods
 {
   public function __construct()
   {
@@ -20,23 +20,39 @@ class Login extends Controller
     }
     $pages = $this->model->countPages($perPage, $role = 'user');
     $users = $this->model->getUsers(page: $page, perPage: $perPage, role: $role);
+    foreach ($users as $key => $user){
+        $location = 'src'.DS.'img'.DS.'users'.DS. $user['id'].DS.$user['default_img'];
+        if(!is_file($location)){
+          $users[$key]['imgPath'] = 'src'.DS.'img'.DS.'users'.DS.'default.jpg';
+        } else {
+          $users[$key]['imgPath'] = $location;
+        }
+    }
+    
     $this->renderView('users', 'index', [
       'users' => $users,
       'page' => $page,
       'perPage' => $perPage,
       'pages' => $pages,  
       'controller' => 'login',
-      'method' => 'index'
+      'method' => 'index',
     ]);
   }
   public function show(int $id, $response = []){
-    $user = $this->model->getUser(id: $id);    
+    $user = $this->model->getUser(id: $id);  
+    $imgPath = 'src'.DS.'img'.DS.'users'.DS. $user['data']['id'].DS.$user['data']['default_img'];
+    
+    if(is_file($imgPath)){
+      $user['data']['imgPath'] = $imgPath;
+    } else {
+      $user['data']['imgPath'] = 'src'.DS.'img'.DS.'users'.DS.'default.jpg';
+    }
+   
     if($response){
       $this->renderView('users', 'show', [
         'user' => $user['data'],
         'msg' => $response['msg'],
         'controller' => 'login',
-        'method' => 'show'
       ]);
     } else if(!$user['ver']){
       $this->renderView('users', 'show', [
@@ -44,7 +60,6 @@ class Login extends Controller
         'user' => $user['data'],
         'errors' => true,
         'controller' => 'login',
-        'method' => 'show'
       ]);
     } else {
       $this->renderView('users', 'show', [
@@ -107,11 +122,10 @@ class Login extends Controller
     $userCredit = $_POST;
     try{
       $user = $this->model->checkUser($userCredit);
-     
       $_SESSION = $this->model->except($user, ['password']);
       header('location:\index.php');
     } catch (Exception $e){ 
-      $this->setResponse($e->getMessage());
+      $this->setResponse($e->getMessage(), true);
       $this->renderView('users','signIn',$this->getResponse());
     } 
   }

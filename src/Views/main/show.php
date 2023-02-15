@@ -19,9 +19,16 @@
     </div>
   </div>
   <div>
-    <?php if(isset($_SESSION)) : ?>
+    <?php if(!empty($_SESSION)) : ?>
       <?php if($car['user_id'] == $_SESSION['id']) :?>
-        <a href="/<?= $data['controller'] ?>/deleteCar/<?= $car['car_id']?>" class="btn btn-primary">Delete</a>
+        <div class="row justify-content-center col-md-3 p-3 mb-2">
+          <div class="col">
+            <a href="/<?= $data['controller'] ?>/deleteCar/<?= $car['car_id']?>" class="btn btn-primary">Delete</a>
+          </div>
+          <div class="col">
+            <a href="/main/edit/<?= $car['car_id']?>" class="btn btn-primary">Edit</a>
+          </div>  
+        </div>  
       <?php endif ;?>  
     <?php endif ;?>  
   </div>

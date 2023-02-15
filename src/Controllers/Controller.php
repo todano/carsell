@@ -2,11 +2,21 @@
 namespace Tod\Controllers;
 use Tod\Helpers\Database;
 
+interface Methods {
+  public function index();
+  public function show(int $dir);
+  public function edit(int $id);
+  public function update(int $id);
+  public function create();
+  public function store();
+  public function delete(int $id, $dir);
+}
+
 class Controller
 {
   protected $model;
   protected $response = [
-    'msg' => '',
+    'msg' => [],
     'errors' => []
   ];
   public function __construct($model)

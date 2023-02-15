@@ -9,7 +9,7 @@ class Car extends Model
   private $brand;
   private $model;
   private $price;
-  private $year;
+  private $dateproduction;
   private $mileage;
   private $fuel;
   private $hp;
@@ -22,22 +22,10 @@ class Car extends Model
   {
     parent::__construct();
   }
-  public function validate($car)
+  public function store($car)
   {
     $userId = $_SESSION['id'];
-    $this->brand = ucwords(strtolower(trim($car['brand'])));
-    $this->model = ucwords(strtolower(trim($car['model'])));
-    $this->year = trim($car['year']);
-    $this->mileage = trim($car['mileage']);
-    $this->price = '€' . trim($car['price']);
-    $this->fuel = ucwords(strtolower(trim($car['fuel'])));
-    $this->hp = (int) trim($car['hp']);
-    if(is_float($car['cubic'])){
-      return $this->response['errors'][] = 'You must enter decimal number for cubic'; 
-    }
-    $this->cubic = (float) trim($car['cubic']);
-    $this->category = ucwords(strtolower(trim($car['category'])));
-    $this->transmission = ucwords(strtolower(trim($car['transmission'])));
+    $this->validate($car);    
 
     // insert into db 
     //get car_id
@@ -60,7 +48,7 @@ class Car extends Model
                 (':userId',
                 ':brand',
                 ':model',
-                ':year',
+                ':dateproduction',
                 ':mileage',
                 ':price',
                   NOW(),
@@ -72,23 +60,24 @@ class Car extends Model
                 ':transmission'
                 )";
     $query = $this->db->prepare($sql);
-    $query->bindParam(':userId', $userId,
-                      ':brand', $this->brand,
-                      ':model', $this->model,
-                      ':year', $this->year,
-                      ':mileage', $this->mileage,
-                      ':price', $this->price,
-                      ':fuel', $this->fuel, 
-                      ':hp', $this->hp, 
-                      ':cubic', $this->cubic, 
-                      ':category', $this->category, 
-                      ':transmission', $this->transmission
-                    );
+    $query->bindParam(':userId', $userId);
+    $query->bindParam(':brand', $this->brand);
+    $query->bindParam(':model', $this->model);
+    $query->bindParam(':dateproduction', $this->dateproduction);
+    $query->bindParam(':mileage', $this->mileage);
+    $query->bindParam(':price', $this->price);
+    $query->bindParam(':fuel', $this->fuel); 
+    $query->bindParam(':hp', $this->hp); 
+    $query->bindParam(':cubic', $this->cubic); 
+    $query->bindParam(':category', $this->category); 
+    $query->bindParam(':transmission', $this->transmission);
     $query->execute();
     $carId = $this->db->lastInsertId();
     } catch (PDOException $e){
       $this->response['msg'] = "There was some error, please contact with us.";
-      $this->response['errors'][] = $sql . "<br>" . $e->getMessage();
+      $error = $sql . "<br>" . $e->getMessage();
+      echo '<pre>'; print_r($error); die;
+      $this->response['errors'] = true;
     }
     
     if (!empty($car['img'])) {
@@ -115,7 +104,22 @@ class Car extends Model
     return $this->response;
   }
 
- 
+  public function validate($car){
+    $this->brand = ucwords(strtolower(trim($car['brand'])));
+    $this->model = ucwords(strtolower(trim($car['model'])));
+    $this->dateproduction = trim($car['year']);
+    $this->mileage = trim($car['mileage']);
+    $this->price = '€' . trim((int)filter_var($car['price'], FILTER_SANITIZE_NUMBER_INT));
+    $this->fuel = ucwords(strtolower(trim($car['fuel'])));
+    $this->hp = (int) trim($car['hp']);
+    if(is_float($car['cubic'])){
+      return $this->response['msg'] = 'You must enter decimal number for cubic'; 
+    }
+    $this->cubic = (float) trim($car['cubic']);
+    $this->category = ucwords(strtolower(trim($car['category'])));
+    $this->transmission = ucwords(strtolower(trim($car['transmission'])));
+    return $this;
+  }
 
   public function getCars($page, $perPage, $role)
   {
@@ -174,5 +178,41 @@ class Car extends Model
     return;
   }
 
+  public function update($id, $car){
+    $this->validate($car);
+    try{
+      $sql = "UPDATE `cars` SET 
+                brand = ?,
+                model = ?,
+                price = ?,
+                date_production = ?,
+                mileage = ?,
+                fuel = ?,
+                hp = ?,
+                cubic = ?,
+                category = ?,
+                transmission = ?,
+                last_update = NOW() 
+              WHERE car_id = ?";
+      $query = $this->db->prepare($sql);
+      $query->execute([
+        $this->brand,
+        $this->model,
+        $this->price,
+        $this->dateproduction,
+        $this->mileage,
+        $this->fuel,
+        $this->hp,
+        $this->cubic,
+        $this->category,
+        $this->transmission,
+        $id
+      ]);        
+    } catch (PRDOExceptiion $e){
+      $this->response['msg'][] = "There was some error, please contact with us.";
+      $this->response['errors'] = $sql . "<br>" . $e->getMessage();
+    }
+    return $this->response;
+  }
   
 }

@@ -304,7 +304,6 @@ class Login extends Model
         $this->response['errors'][] = $sql . "<br>" . $e->getMessage();
       }
     }
-    //echo '<pre>'; print_r($this->response); die;
     return $this->response;
   }
 

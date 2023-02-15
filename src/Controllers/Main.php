@@ -22,7 +22,7 @@ class Main extends Controller
     $page = $_GET['page'] ?? 1;
     $perPage = $_GET['perPage'] ?? 6;
     $pages = $this->carsController->model->countPages($perPage);
-    $cars = $this->carsController->getCars(page: $page, perPage: $perPage);
+    $cars = $this->carsController->index(page: $page, perPage: $perPage);
     // include BASE_PATH.DS.'src'.DS.'Views'.DS.'main'.DS.'index.php';
     $this->getResponse();
     //echo '<pre>'; print_r($this->response); die;
@@ -38,14 +38,47 @@ class Main extends Controller
     ]);
   }
   public function show($id){
-    $car = $this->carsController->model->getCar($id)[0];
+    $car = $this->carsController->show($id)[0];
     $user = $this->loginController->model->getUser($car['user_id']);
-    $this->renderView('main', 'show',[
-      'car' => $car,
-      'user' => $user['data'],
-      'controller' => 'main',
-      'method' => 'show'
+    if(!$this->response){
+      $this->renderView('main', 'show',[
+        'car' => $car,
+        'user' => $user['data'],
+        'controller' => 'main',
+        'method' => 'show'
+      ]);
+    } else {
+      $this->renderView('main', 'show',[
+        'car' => $car,
+        'user' => $user['data'],
+        'controller' => 'main',
+        'msg' => $this->response['msg']
+      ]);
+    }
+    
+  }
+
+  public function edit(int $id){
+    $car = $this->carsController->edit($id)[0];
+    $this->renderView('cars', 'edit', [
+      'car' => $car
     ]);
+  }
+
+  public function update(int $id){
+    $response = $this->carsController->update($id);
+    if(!$response['errors']){
+      $this->setResponse('Your add is updated!');
+      $this->getResponse();
+      $this->show($id);
+    } else {
+      $car = $this->model->getCar($id)[0];
+      $this->renderView('cars', 'edit', [
+        'car' => $car,
+        'msg' => $this->response['msg'],
+        'errors' => $this->response['errors']
+      ]);
+    }
   }
   public function deleteCar(int $id){
     $car = $this->carsController->model->getCar($id)[0];

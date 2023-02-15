@@ -25,7 +25,7 @@ class Admin extends Controller
     $page = $_GET['page'] ?? 1;
     $perPage = $_GET['perPage'] ?? 6;
     $pages = $this->carsController->model->countPages($perPage, $role = 'admin');
-    $cars = $this->carsController->getCars(role: 'admin');
+    $cars = $this->carsController->index(role: 'admin');
     $this->renderView('admin', 'indexCar', [
       'cars' => $cars,
       'page' => $page,
@@ -37,11 +37,11 @@ class Admin extends Controller
     'admin');
   }
   public function showCar(int $id){
-    $car = $this->carsController->getCars( id: $id, role:'admin')[0];
-    $user = $this->loginController->model->getUser($car['user_id'], $page = 1, $perPage = 6, $role = 'admin')[0];
+    $car = $this->carsController->show($id)[0];
+    $user = $this->loginController->model->getUser($car['user_id']);
     $this->renderView('admin', 'showCar',[
     'car' => $car,
-    'user' => $user,
+    'user' => $user['data'],
     'controller' => 'admin',
     'method' => 'showCar'
     ],
@@ -92,5 +92,9 @@ class Admin extends Controller
   public function deleteUser(int $id){
     $this->loginController->delete($id);
     $this->users();
+  }
+
+  public function search(){
+    //TODO
   }
 }

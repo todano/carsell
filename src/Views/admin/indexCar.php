@@ -1,4 +1,3 @@
-<div class="main">
 <?php require_once(__DIR__.DS.'..'.DS.'main'.DS.'perPage.php'); ?>
   <form method="post" action="/admin/verCars/">
     <?php foreach ($cars as $key => $car) : ?>
@@ -15,4 +14,4 @@
     <button class="btn btn-primary" type="submit">Verify</button>
   </form>
 <?php require_once(__DIR__.DS.'..'.DS.'main'.DS.'pagination.php'); ?>
-</div>
+

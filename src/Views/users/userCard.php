@@ -1,6 +1,6 @@
 <div class="col-4">
     <div class="card" style="width: 18rem;">
-    <?php include('userImg.php'); ?>   
+        <img src="/<?= $user['imgPath'] ;?>" class="card-img-top" alt="...">
         <div class="card-body bg-info">
             <h5 class="card-title"><?= $user['name'].' '.$user['last_name'] ?></h5>
             <h5 class="card-text"> <?= $user['username'] ?></h5>

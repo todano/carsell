@@ -22,9 +22,9 @@
             <?php endif; ?>
             <button class="btn btn-primary" type="submit">Verify</button>
             </div>
-            <div class="col">
-                <a href="/login/show/<?= $user['id']?>" class="btn btn-primary">View details</a>
-            </div>    
+            <div class="col">        
+                <a href="/<?= $data['controller'] ?>/deleteUser/<?= $user['id']?>" class="btn btn-primary">Delete</a>
+            </div>
         </div>
     </div>
 </form>
